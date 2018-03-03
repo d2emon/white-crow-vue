@@ -1,5 +1,10 @@
 <template>
   <v-layout justify-center align-center>
+    <!-- v-btn fab bottom right color="pink" dark fixed @click.stop="nextTurn" -->
+    <v-btn fab bottom right dark fixed @click.stop="nextTurn">
+      <v-icon>casino</v-icon>
+    </v-btn>
+
     <ask-players></ask-players>
 
     <v-dialog id="next-player" v-model="nextPlayer" transition="dialog-bottom-transition" fullscreen scrollable text-md-center>
