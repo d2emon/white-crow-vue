@@ -275,7 +275,7 @@
 </template>
 
 <script>
-import AskPlayers from './AskPlayers'
+import AskPlayers from '@/components/AskPlayers'
 
 var GameModule = require('@/store/game')
 var game = GameModule.game
