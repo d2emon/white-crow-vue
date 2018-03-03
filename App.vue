@@ -7,7 +7,7 @@ import 'vuetify/dist/vuetify.min.css'
 // import 'font-awesome/css/font-awesome.css'
 
 export default {
-  name: 'white-crow',
+  name: 'white-crow'
 }
 </script>
 
