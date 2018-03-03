@@ -117,7 +117,7 @@
                                 Бросок:
                               </v-flex>
                               <v-flex md3>
-                                <v-text-field name="player-dice" single-line readonly label="Dice" :value="player.dice.score"></v-text-field>
+                                <v-icon>mdi-dice-{{ player.dice.score }}</v-icon>
                               </v-flex>
                             </v-layout>
                             <v-layout row wrap>
