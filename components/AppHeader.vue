@@ -5,28 +5,18 @@
         <span class="hidden-xs-only">Белая Ворона</span>
       </v-toolbar-title>
       <div class="d-flex align-center" style="margin-left: auto">
-        <v-btn icon to="/">
-           <v-icon>home</v-icon>
-        </v-btn>
-        <v-btn icon>
-          <v-icon>apps</v-icon>
-        </v-btn>
-        <v-btn icon>
-          <v-icon>notifications</v-icon>
-        </v-btn>
-        <v-spacer></v-spacer>
-        <v-tooltip bottom>
-          <v-btn icon slot="activator" @click="nextTurn">
-            <v-icon>casino</v-icon>
+        <template v-for="(item, id) in items">
+           <v-spacer v-if="item.spacer" :key="id"></v-spacer>
+           <v-tooltip v-else-if="item.text" bottom>
+             <v-btn icon slot="activator" @click="itemAction(item)">
+               <v-icon>{{ item.icon }}</v-icon>
+             </v-btn>
+             <span>{{ item.text }}</span>
+           </v-tooltip>
+           <v-btn v-else icon :key="id" icon :to="item.to" @click="itemAction(item)">
+             <v-icon>{{ item.icon }}</v-icon>
           </v-btn>
-          <span>Next Turn</span>
-        </v-tooltip>
-        <v-tooltip bottom>
-          <v-btn icon slot="activator">
-            <v-icon>attach_money</v-icon>
-          </v-btn>
-          <span>Bank</span>
-        </v-tooltip>
+        </template>
         <v-tooltip bottom>
           <v-btn icon slot="activator" v-if="player.day" @click="showField">
            <v-badge overlap>
@@ -85,6 +75,46 @@ export default {
       }
 
       return game.player()
+    },
+    items: function () {
+      return [
+        {
+          icon: 'home',
+          to: '/'
+        },
+        { icon: 'apps' },
+        { icon: 'notifications' },
+        { spacer: true },
+        {
+          icon: 'casino',
+          action: this.nextTurn,
+          text: 'Next Turn'
+        },
+        {
+          icon: 'attach_money',
+          text: 'Bank'
+        }
+        /*
+        {
+          icon: 'today',
+          click: 'showField',
+          badge: this.player.day,
+          text: 'Field'
+        },
+        {
+          icon: 'mail',
+          badge: this.player.mails,
+          badgeColor: 'red',
+          text: 'Mails'
+        },
+        {
+          icon: 'work',
+          badge: this.player.items,
+          badgeColor: 'red',
+          text: 'Items'
+        }
+        */
+      ]
     }
   },
   data: () => ({
@@ -102,6 +132,11 @@ export default {
     showField: function () {
       alert('Field click')
       // fmField.Show;
+    },
+    itemAction: function (item) {
+      if (!item) return
+      if (!item.action) return
+      item.action()
     }
   }
 }
