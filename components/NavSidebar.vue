@@ -78,9 +78,9 @@ export default {
         name: 'Player 1'
       }
     },
-    show: function () { return this.$store.state.showSidebar },
-    mini: function () { return this.$store.state.minified },
-    items: function () { return this.$store.state.sidebarMenu }
+    show: function () { return this.$store.state.sidebar.visible },
+    mini: function () { return this.$store.state.sidebar.minified },
+    items: function () { return this.$store.state.sidebar.menu }
   },
   data: () => ({
     drawer: this.show,
@@ -91,7 +91,7 @@ export default {
       alert(i)
     },
     switchMini: function () {
-      this.$store.commit('switchSidebarMini')
+      this.$store.commit('sidebar/switchMini')
     }
   },
   watch: {
@@ -99,7 +99,7 @@ export default {
       this.drawer = this.show
     },
     drawer: function (val) {
-      this.$store.commit('setShowSidebar', val)
+      this.$store.commit('sidebar/setVisibility', val)
     }
   }
 }

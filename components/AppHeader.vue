@@ -91,7 +91,7 @@ export default {
   }),
   methods: {
     switchDrawer () {
-      this.$store.commit('switchSidebar')
+      this.$store.commit('sidebar/switchVisible')
     },
     nextTurn () {
       game.nextTurn()
