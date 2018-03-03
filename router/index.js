@@ -7,17 +7,17 @@ export default new Router({
   routes: [
     {
       path: '/',
-      name: 'welcome-view',
-      component: require('@/components/WelcomeView').default
-    },
-    {
-      path: '/inspire',
-      name: 'inspire',
-      component: require('@/components/InspireView').default
+      name: 'start-page',
+      component: require('@/components/StartPage').default
     },
     {
       path: '*',
       redirect: '/'
+    },
+    {
+      path: '/play',
+      name: 'play',
+      component: require('@/components/Play').default
     }
   ]
 })
