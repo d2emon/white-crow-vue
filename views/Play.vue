@@ -117,8 +117,8 @@
                                 Бросок:
                               </v-flex>
                               <v-flex md3>
-                                <v-icon v-if="(player.dice.score > 0) && (player.dice.score < 7)">mdi-dice-{{ player.dice.score }}</v-icon>
-                                <v-icon v-else>mdi-dice-multiple</v-icon>
+                                <v-icon large v-if="(player.dice.score > 0) && (player.dice.score < 7)">mdi-dice-{{ player.dice.score }}</v-icon>
+                                <v-icon large v-else>mdi-dice-multiple</v-icon>
                               </v-flex>
                             </v-layout>
                             <v-layout row wrap>

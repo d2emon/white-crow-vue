@@ -3,6 +3,7 @@ import Router from 'vue-router'
 
 // Containers
 import Full from '@/containers/Full'
+// import Empty from '@/containers/Empty'
 
 // Views
 import Start from '@/views/StartPage'
@@ -17,15 +18,10 @@ export default new Router({
   routes: [
     {
       path: '/',
-      redirect: '/start',
+      redirect: '/play',
       name: 'Home',
       component: Full,
       children: [
-        {
-          path: 'start',
-          name: 'Start Page',
-          component: Start
-        },
         {
           path: 'play',
           name: 'Play',
@@ -34,8 +30,13 @@ export default new Router({
       ]
     },
     {
+      path: '/start',
+      name: 'White Crow',
+      component: Start
+    },
+    {
       path: '*',
-      redirect: '/'
+      redirect: '/start'
     }
   ]
 })
