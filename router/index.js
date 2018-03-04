@@ -7,6 +7,7 @@ import Full from '@/containers/Full'
 
 // Views
 import Start from '@/views/StartPage'
+import SetPlayers from '@/views/SetPlayers'
 import Play from '@/views/Play'
 
 Vue.use(Router)
@@ -33,6 +34,11 @@ export default new Router({
       path: '/start',
       name: 'White Crow',
       component: Start
+    },
+    {
+      path: '/set-players',
+      name: 'SetPlayers',
+      component: SetPlayers
     },
     {
       path: '*',

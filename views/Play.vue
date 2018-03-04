@@ -5,8 +5,6 @@
       <v-icon>casino</v-icon>
     </v-btn>
 
-    <ask-players></ask-players>
-
     <v-dialog id="next-player" v-model="nextPlayer" transition="dialog-bottom-transition" fullscreen scrollable text-md-center>
       <v-card class="text-xs-center" v-if="game.player()">
         <v-card-title class="grey py-4 title">
@@ -280,56 +278,48 @@
 </template>
 
 <script>
-import AskPlayers from '@/components/AskPlayers'
-
-var GameModule = require('@/store/game')
-var game = GameModule.game
-
 export default {
   name: 'play',
-  components: {
-    AskPlayers
-  },
   computed: {
     nextPlayer: function () {
-      if (!game.player()) {
+      if (!this.game.player()) {
         return false
       }
-      return game.player().active
+      return this.game.player().active
     }
   },
   data: function () {
     return {
-      game: game,
+      game: this.$store.state.game.game,
       fieldDate: 0,
       fieldName: 0,
       count: 3,
-      players: game.players,
-      activePlayer: game.activePlayer,
+      players: this.$store.state.game.players,
+      activePlayer: this.$store.state.game.activePlayer,
       motd: false
     }
   },
   methods: {
     updateForm: function () {
-      if (!game.player()) { return }
-      this.fieldDate = game.player().fieldDate.id
-      this.fieldName = game.player().fieldDate.caption
+      if (!this.game.player()) { return }
+      this.fieldDate = this.game.player().fieldDate.id
+      this.fieldName = this.game.player().fieldDate.caption
 
       // this.activePlayer = '' + tabIndex
-      // this.player.bills = game.players[tabIndex].total.bills
+      // this.player.bills = this.players[tabIndex].total.bills
 
       // fmField.cdField.Day := Player.Day;
     },
     useDay: function () {
-      if (!game.player()) { return }
-      game.player().fieldDate.useDay()
+      if (!this.game.player()) { return }
+      this.game.player().fieldDate.useDay()
       this.updateForm()
     },
     turnClick: function () {
-      game.nextTurn()
-      alert(game.turnId())
-      this.player = game.player()
-      // this.activePlayer = '' + game.playerId
+      this.$store.dispatch('nextTurn')
+      alert(this.game.turnId())
+      this.player = this.game.player()
+      // this.activePlayer = '' + this.game.playerId
       this.useDay()
     },
     fieldClick: function () {
@@ -337,9 +327,12 @@ export default {
       // fmField.Show;
     },
     beginTurn: function () {
-      game.player().turn()
+      this.game.player().turn()
       this.motd = true
     }
+  },
+  mounted: function () {
+    if (!this.$store.state.game.players.length) this.$router.push('/set-players')
   }
 }
 </script>
