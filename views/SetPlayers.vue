@@ -111,7 +111,7 @@ export default {
       this.promptPlayers = false
 
       // if (this.game.player()) this.game.player().showSplash()
-      this.$router.push('/play')
+      this.$router.push('/new-turn')
     }
   },
   mounted: function () {

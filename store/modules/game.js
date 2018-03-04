@@ -52,6 +52,7 @@ const state = {
 
 const getters = {
   player: function (state) {
+    console.log(state)
     return state.players[state.playerId]
   }
 }
@@ -73,6 +74,13 @@ const mutations = {
   },
   nextTurn: function (state) {
     state.turn++
+    alert(state.turn)
+  },
+  playerTurn: function (state) {
+    state.players[state.playerId].turn()
+  },
+  showSplash: function (state) {
+    state.players[state.playerId].showSplash()
   },
   setPlayerId: function (state, turn) {
     state.playerId = turn
@@ -88,8 +96,11 @@ const actions = {
     }
     context.commit('setPlayerId', context.state.turn)
 
-    state.player().showSplash()
+    context.commit('showSplash')
     // state.nextRound()
+  },
+  playerTurn: function (context) {
+    context.getters.player.turn()
   },
   addPlayers: function (context, count) {
     if (count < 2) { return }

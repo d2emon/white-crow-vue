@@ -8,6 +8,7 @@ import Full from '@/containers/Full'
 // Views
 import Start from '@/views/StartPage'
 import SetPlayers from '@/views/SetPlayers'
+import NewTurn from '@/views/NewTurn'
 import Play from '@/views/Play'
 
 Vue.use(Router)
@@ -39,6 +40,11 @@ export default new Router({
       path: '/set-players',
       name: 'SetPlayers',
       component: SetPlayers
+    },
+    {
+      path: '/new-turn',
+      name: 'NewTurn',
+      component: NewTurn
     },
     {
       path: '*',

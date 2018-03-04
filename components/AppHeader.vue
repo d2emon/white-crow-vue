@@ -18,9 +18,9 @@
           </v-btn>
         </template>
         <v-tooltip bottom>
-          <v-btn icon slot="activator" v-if="player.day" @click="showField">
+          <v-btn icon slot="activator" v-if="day" @click="showField">
            <v-badge overlap>
-              <span slot="badge">{{ player.day }}</span>
+              <span slot="badge">{{ day }}</span>
               <v-icon>today</v-icon>
             </v-badge>
           </v-btn>
@@ -32,7 +32,7 @@
         <v-tooltip bottom>
           <v-btn icon slot="activator">
             <v-badge overlap color="red">
-              <span slot="badge">{{ player.mails }}</span>
+              <span slot="badge">{{ mails }}</span>
               <v-icon>mail</v-icon>
             </v-badge>
           </v-btn>
@@ -41,14 +41,14 @@
         <v-tooltip bottom>
           <v-btn icon slot="activator">
             <v-badge overlap color="red">
-              <span slot="badge">{{ player.items }}</span>
+              <span slot="badge">{{ playerItems }}</span>
               <v-icon>work</v-icon>
             </v-badge>
           </v-btn>
           <span>Items</span>
         </v-tooltip>
         <v-spacer></v-spacer>
-        <v-btn flat large>
+        <v-btn flat v-if="player" large>
           {{ player.name }}
           <v-avatar size="32px">
             <img :src="player.avatar" :alt="player.name">
@@ -59,23 +59,13 @@
 </template>
 
 <script>
-var GameModule = require('@/store/game')
-var game = GameModule.game
-
 export default {
   name: 'app-header',
   computed: {
-    player: function () {
-      if (!game.player()) {
-        return {
-          name: 'Player',
-          avatar: 'https://vuetifyjs.com/static/doc-images/logo.svg',
-          mails: 0
-        }
-      }
-
-      return game.player()
-    },
+    player: function () { return this.$store.getters.player },
+    day: function () { return this.player ? this.player.day : false },
+    mails: function () { return this.player ? this.player.mails : false },
+    playerItems: function () { return this.player ? this.player.items : false },
     items: function () {
       return [
         {
@@ -124,10 +114,11 @@ export default {
       this.$store.commit('sidebar/switchVisible')
     },
     nextTurn () {
-      game.nextTurn()
+      this.$store.dispatch('nextTurn')
       // this.player = game.player()
-      game.activePlayer = '' + game.playerId
+      // game.activePlayer = '' + game.playerId
       // this.updateForm()
+      this.$router.push('/new-turn')
     },
     showField: function () {
       alert('Field click')
