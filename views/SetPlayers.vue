@@ -87,7 +87,7 @@
 export default {
   name: 'set-players',
   computed: {
-    players: function () { return this.$store.state.game.players }
+    players: function () { return this.$store.getters.players }
   },
   data: function () {
     return {
@@ -103,14 +103,11 @@ export default {
     addPlayers: function (count) {
       if (count <= 0) count = this.count
 
-      this.$store.dispatch('addPlayers', count)
+      this.$store.commit('addPlayers', count)
       this.$store.commit('nextRound')
     },
     setPlayerNames: function (e) {
       // game = TWCGame.Create(3, this.count)
-      this.promptPlayers = false
-
-      // if (this.game.player()) this.game.player().showSplash()
       this.$router.push('/new-turn')
     }
   },

@@ -28,7 +28,7 @@
 export default {
   name: 'set-players',
   computed: {
-    players: function () { return this.$store.state.game.players },
+    players: function () { return this.$store.getters.players },
     player: function () { return this.$store.getters.player }
   },
   data: function () {

@@ -1,13 +1,8 @@
-var Player = require('../player')
-// var Field = require('../field')
+const { Game, Turns } = require('../models')
 
 const state = {
-  players: [],
-
-  round: 0,
-  turn: 0,
-  playerId: 0,
-  activePlayer: '0'
+  Game,
+  Turns
 
   /*
   game: {
@@ -51,9 +46,13 @@ const state = {
 }
 
 const getters = {
+  turn: (state) => { return state.Turns.turn },
+  round: (state) => { return state.Turns.round },
+
+  players: (state) => { return state.Game.players },
   player: function (state) {
     console.log(state)
-    return state.players[state.playerId]
+    return state.Game.player()
   }
 }
 
@@ -64,53 +63,33 @@ const mutations = {
   addPlayer: function (state, id) {
     const name = 'Player ' + (id + 1)
     console.log(id, name)
-    var p = Player.createPlayer('' + id, name)
-    state.players.push(p)
+    state.Game.addPlayer(id, name)
+  },
+  addPlayers: function (state, count) {
+    state.Game.addPlayers(count)
   },
   nextRound: function (state) {
-    state.round++
-    state.turn = 0
-    state.playerId = 0
+    state.Game.nextRound()
   },
   nextTurn: function (state) {
-    state.turn++
-    alert(state.turn)
+    state.Game.nextTurn()
+    alert(state.Turns.turn)
   },
   playerTurn: function (state) {
-    state.players[state.playerId].turn()
+    state.Game.player().turn()
   },
   showSplash: function (state) {
-    state.players[state.playerId].showSplash()
-  },
-  setPlayerId: function (state, turn) {
-    state.playerId = turn
-    state.activePlayer = '' + state.playerId
+    state.Game.player().showSplash()
   }
 }
 
 const actions = {
   nextTurn: function (context) {
     context.commit('nextTurn')
-    if (context.state.turn >= context.state.players.length) {
-      context.commit('nextRound')
-    }
-    context.commit('setPlayerId', context.state.turn)
-
-    context.commit('showSplash')
-    // state.nextRound()
+    // context.commit('showSplash')
   },
   playerTurn: function (context) {
     context.getters.player.turn()
-  },
-  addPlayers: function (context, count) {
-    if (count < 2) { return }
-    if (count > 16) { return }
-
-    context.commit('clearPlayers')
-    for (let i = 0; i < count; i++) {
-      context.commit('addPlayer', i)
-    }
-    console.log(context.state.players)
   }
 }
 

@@ -2,42 +2,31 @@
     <v-footer app fixed>
       <v-layout row wrap>
         <v-flex md2>
-          Игрок №{{ game.turnId() }}: {{ player.name }}
+          Игрок №{{ turns.turn + 1 }}: <span v-if="player">{{ player.name }}</span>
         </v-flex>
         <v-flex md2>
-          Тур {{ game.round }}
+          Тур {{ turns.round }}
         </v-flex>
         <v-flex md2 v-if="player">
           День {{ player.day }}
         </v-flex>
-        <v-flex md6 v-if="player.fieldDate">
-          {{ player.fieldDate.caption }}
+        <v-flex md6>
+          <span v-if="player && player.fieldDate">{{ player.fieldDate.caption }}</span>
+          <span v-else>День</span>
         </v-flex>
       </v-layout>
     </v-footer>
 </template>
 
 <script>
-var GameModule = require('@/store/game')
-var game = GameModule.game
-
 export default {
   name: 'app-footer',
   computed: {
-    player: function () {
-      if (!game.player()) {
-        return {
-          name: 'Player',
-          avatar: 'https://vuetifyjs.com/static/doc-images/logo.svg',
-          mails: 0
-        }
-      }
-
-      return game.player()
-    }
+    game: function () { return this.$store.state.game },
+    turns: function () { return this.$store.state.game.Turns },
+    player: function () { return this.$store.getters.player }
   },
   data: () => ({
-    game: game
   })
 }
 </script>

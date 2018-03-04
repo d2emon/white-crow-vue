@@ -56,63 +56,53 @@
                       <v-card-text>
                         <v-layout row wrap>
                           <v-flex md12>
+                            <v-avatar size="48px">
+                              <img :src="p.avatar" :alt="p.name">
+                            </v-avatar>
                             <h1>{{ p.name }}</h1>
-                            <h2>{{ activePlayer }}</h2>
                           </v-flex>
                         </v-layout>
                         <v-layout row wrap>
                           <v-flex md6>
                             <v-card>
-
-                            <v-layout row wrap>
-                              <v-flex md3>
-                                Игрок:
-                              </v-flex>
-                              <v-flex md3>
-                                <v-text-field name="player-name" single-line readonly label="Name" :value="p.name"></v-text-field>
-                              </v-flex>
-                            </v-layout>
-                            <v-layout row wrap>
-                              <v-flex md3>
-                                Наличные:
-                              </v-flex>
-                              <v-flex md3>
-                                <v-text-field name="player-money" single-line readonly label="Money" :value="p.money.cash"></v-text-field>
-                              </v-flex>
-                            </v-layout>
-                            <v-layout row wrap>
-                              <v-flex md3>
-                                В банке:
-                              </v-flex>
-                              <v-flex md3>
-                                <v-text-field name="player-account" single-line readonly label="Account" :value="p.money.account"></v-text-field>
-                              </v-flex>
-                            </v-layout>
-                            <v-layout row wrap>
-                              <v-flex md3>
-                                День:
-                              </v-flex>
-                              <v-flex md3>
-                                <v-text-field name="player-day" single-line readonly label="Day" :value="p.day"></v-text-field>
-                              </v-flex>
-                            </v-layout>
-                            <v-layout row wrap>
-                              <v-flex md3>
-                                Бросок:
-                              </v-flex>
-                              <v-flex md3>
-                                <v-icon large v-if="(p.dice.score > 0) && (p.dice.score < 7)">mdi-dice-{{ p.dice.score }}</v-icon>
-                                <v-icon large v-else>mdi-dice-multiple</v-icon>
-                              </v-flex>
-                            </v-layout>
-                            <v-layout row wrap>
-                              <v-flex md3>
-                                Банк:
-                              </v-flex>
-                              <v-flex md3>
-                                <v-text-field name="player-bank" single-line readonly label="Bank" :value="p.total.bank"></v-text-field>
-                              </v-flex>
-                            </v-layout>
+                              <v-list two-line>
+                                <v-list-tile>
+                                  <v-list-tile-content>
+                                    <v-list-tile-title>Наличные:</v-list-tile-title>
+                                  </v-list-tile-content>
+                                  <v-list-tile-action>{{ p.money.cash }}$</v-list-tile-action>
+                                </v-list-tile>
+                                <v-list-tile>
+                                  <v-list-tile-content>
+                                    <v-list-tile-title>В банке:</v-list-tile-title>
+                                  </v-list-tile-content>
+                                  <v-list-tile-action>{{ p.money.account }}$</v-list-tile-action>
+                                </v-list-tile>
+                                <v-list-tile>
+                                  <v-list-tile-content>
+                                    <v-list-tile-title>День:</v-list-tile-title>
+                                    <v-list-tile-sub-title>{{ p.fieldDate.caption }}</v-list-tile-sub-title>
+                                  </v-list-tile-content>
+                                  <v-list-tile-action>{{ p.day }}</v-list-tile-action>
+                                </v-list-tile>
+                                <v-list-tile>
+                                  <v-list-tile-content>
+                                    <v-list-tile-title>Бросок:</v-list-tile-title>
+                                  </v-list-tile-content>
+                                  <v-list-tile-action>
+                                    <v-icon large v-if="(p.dice.score > 0) && (p.dice.score < 7)">mdi-dice-{{ p.dice.score }}</v-icon>
+                                    <v-icon large v-else>mdi-dice-multiple</v-icon>
+                                  </v-list-tile-action>
+                                </v-list-tile>
+                                <v-list-tile>
+                                  <v-list-tile-content>
+                                    <v-list-tile-title>Банк:</v-list-tile-title>
+                                  </v-list-tile-content>
+                                  <v-list-tile-action>
+                                    <v-text-field name="player-bank" single-line readonly label="Bank" :value="p.total.bank"></v-text-field>
+                                  </v-list-tile-action>
+                                </v-list-tile>
+                              </v-list>
                             </v-card>
                           </v-flex>
                           <v-flex md6>
@@ -262,8 +252,8 @@
 export default {
   name: 'play',
   computed: {
-    game: function () { return this.$store.state.game.game },
-    players: function () { return this.$store.state.game.players },
+    game: function () { return this.$store.state.game.Game },
+    players: function () { return this.$store.getters.players },
     // activePlayer: function () { return this.$store.state.game.activePlayer },
     player: function () { return this.$store.getters.player },
     nextPlayer: function () {
@@ -273,7 +263,7 @@ export default {
   },
   data: function () {
     return {
-      activePlayer: this.$store.state.game.playerId,
+      activePlayer: '' + this.$store.state.game.Turns.turn,
       fieldDate: 0,
       fieldName: 0,
       motd: false
@@ -311,6 +301,9 @@ export default {
     }
   },
   mounted: function () {
+    console.log(this.$store.getters)
+    console.log(this.game.players)
+    console.log(this.players)
     if (!this.players.length) this.$router.push('/set-players')
     if (this.nextPlayer) this.$router.push('new-turn')
   }
