@@ -14,8 +14,10 @@ module.exports = {
   },
   nextTurn: function () {
     this.turn++
-    if (this.turn >= this.players.length) {
+    if (this.turn >= this.players) {
       this.nextRound()
     }
+    alert(this.turn)
+    alert(this.players)
   }
 }

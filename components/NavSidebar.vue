@@ -72,12 +72,7 @@
 export default {
   name: 'nav-sidebar',
   computed: {
-    player: function () {
-      return {
-        avatar: 'https://randomuser.me/api/portraits/men/85.jpg',
-        name: 'Player 1'
-      }
-    },
+    player: function () { return this.$store.getters.player },
     show: function () { return this.$store.state.sidebar.visible },
     mini: function () { return this.$store.state.sidebar.minified },
     items: function () { return this.$store.state.sidebar.menu }

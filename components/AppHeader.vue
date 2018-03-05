@@ -5,7 +5,7 @@
         <span class="hidden-xs-only">Белая Ворона</span>
       </v-toolbar-title>
       <div class="d-flex align-center" style="margin-left: auto">
-        <template v-for="(item, id) in items">
+        <template v-for="(item, id) in menuItems">
            <v-spacer v-if="item.spacer" :key="id"></v-spacer>
            <v-tooltip v-else-if="item.text" bottom>
              <v-btn icon slot="activator" @click="itemAction(item)">
@@ -31,19 +31,21 @@
         </v-tooltip>
         <v-tooltip bottom>
           <v-btn icon slot="activator">
-            <v-badge overlap color="red">
+            <v-badge overlap color="red" v-if="mails">
               <span slot="badge">{{ mails }}</span>
               <v-icon>mail</v-icon>
             </v-badge>
+            <v-icon v-else>mail</v-icon>
           </v-btn>
           <span>Mails</span>
         </v-tooltip>
         <v-tooltip bottom>
           <v-btn icon slot="activator">
-            <v-badge overlap color="red">
-              <span slot="badge">{{ playerItems }}</span>
+            <v-badge overlap color="red" v-if="items">
+              <span slot="badge">{{ items }}</span>
               <v-icon>work</v-icon>
             </v-badge>
+            <v-icon v-else>work</v-icon>
           </v-btn>
           <span>Items</span>
         </v-tooltip>
@@ -64,9 +66,9 @@ export default {
   computed: {
     player: function () { return this.$store.getters.player },
     day: function () { return this.player ? this.player.day : false },
-    mails: function () { return this.player ? this.player.mails : false },
-    playerItems: function () { return this.player ? this.player.items : false },
-    items: function () {
+    mails: function () { return this.player ? this.player.mails.legth : false },
+    items: function () { return this.player ? this.player.items.length : false },
+    menuItems: function () {
       return [
         {
           icon: 'home',

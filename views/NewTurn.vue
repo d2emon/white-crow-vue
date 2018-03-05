@@ -2,13 +2,13 @@
   <v-app>
     <v-container fluid fill-height>
       <v-flex xs12>
-        <v-card class="text-xs-center" v-if="player">
+        <v-card class="text-xs-center">
           <v-card-title class="grey py-4 title">
             Новый ход
           </v-card-title>
           <v-container grid-list-sm class="pa-4">
             <v-card class="ma-5 fill-height">
-              <v-card-text>
+              <v-card-text v-if="player">
                 <h1 class="display-4">{{ player.name }}</h1>
               </v-card-text>
               <v-card-actions>
@@ -43,6 +43,7 @@ export default {
   },
   mounted: function () {
     if (!this.players) this.$router.push('/set-players')
+    if (!this.player) this.$router.push('/set-players')
   }
 }
 </script>

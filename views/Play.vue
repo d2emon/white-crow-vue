@@ -63,7 +63,7 @@
                           </v-flex>
                         </v-layout>
                         <v-layout row wrap>
-                          <v-flex md6>
+                          <v-flex md4>
                             <v-card>
                               <v-list two-line>
                                 <v-list-tile>
@@ -105,9 +105,9 @@
                               </v-list>
                             </v-card>
                           </v-flex>
-                          <v-flex md6>
-                            <v-card>
-                                <v-card>
+                          <v-flex md8>
+                            <v-card v-if="p.mails.length || p.items.length">
+                              <v-card v-if="p.mails.length">
                                   <v-toolbar color="primary" dark>
                                     <v-toolbar-title>Письма</v-toolbar-title>
                                     <v-spacer></v-spacer>
@@ -142,9 +142,9 @@
                                       </v-list-tile>
                                     </template>
                                   </v-list>
-                                </v-card>
-                                <br>
-                                <v-card>
+                              </v-card>
+                              <br />
+                              <v-card v-if="p.items.length">
                                   <v-toolbar color="primary" dark>
                                     <v-toolbar-title>Товары</v-toolbar-title>
                                     <v-spacer></v-spacer>
@@ -166,8 +166,7 @@
                                       </v-list-tile>
                                     </template>
                                   </v-list>
-                                </v-card>
-
+                              </v-card>
                             </v-card>
                           </v-flex>
                         </v-layout>
@@ -266,10 +265,17 @@ export default {
       activePlayer: '' + this.$store.state.game.Turns.turn,
       fieldDate: 0,
       fieldName: 0,
-      motd: false
+      motd: true
     }
   },
   methods: {
+    nextTurn () {
+      this.$store.dispatch('nextTurn')
+      // this.player = game.player()
+      // game.activePlayer = '' + game.playerId
+      // this.updateForm()
+      this.$router.push('/new-turn')
+    },
     updateForm: function () {
       if (!this.player) { return }
       this.fieldDate = this.player.fieldDate.id
