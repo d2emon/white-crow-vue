@@ -1,6 +1,7 @@
 var Player = require('../player')
-var Field = require('../field')
+
 var Turns = require('./turns')
+var Field = require('../field')
 
 module.exports = {
   turns: Turns,

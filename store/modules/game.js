@@ -1,8 +1,9 @@
-const { Game, Turns } = require('../models')
+const { Game, Turns, Field } = require('../models')
 
 const state = {
   Game,
-  Turns
+  Turns,
+  Field
 
   /*
   game: {
