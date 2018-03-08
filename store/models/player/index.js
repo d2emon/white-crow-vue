@@ -1,5 +1,5 @@
 var gravatar = require('gravatar')
-var Field = require('./field')
+var Field = require('../field')
 
 function createPlayer (id, name) {
   return {

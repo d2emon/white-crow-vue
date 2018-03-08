@@ -17,7 +17,5 @@ module.exports = {
     if (this.turn >= this.players) {
       this.nextRound()
     }
-    alert(this.turn)
-    alert(this.players)
   }
 }

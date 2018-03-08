@@ -14,7 +14,6 @@ module.exports = {
   },
 
   field: Field.field,
-  messages: [],
 
   create: function () {
     this.players = []
@@ -22,7 +21,7 @@ module.exports = {
 
     // White Crow
     this.field = Field.field // TWCField.Create
-    this.messages = [] // TMessageList.Create;
+    // this.messages = [] // TMessageList.Create;
     // Self.FMessages.Fill;
 
     // this.addPlayers(players)
