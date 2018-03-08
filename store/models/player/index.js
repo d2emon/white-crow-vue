@@ -43,22 +43,14 @@ function createPlayer (id, name) {
 
     // Messages:  TMessageList;
     // mail: this.messages
+
+    newMails: [],
+    offers: [],
+
     mails: [],
-    items: [
-      /*
-      {
-        title: name,
-        subtitle: 'Mail Subtitle',
-        avatar: gravatar.url(name, { d: 'retro' }) // 'https://www.gravatar.com/avatar/' + name + '?d=retro',
-      },
-      {
-        title: name,
-        subtitle: 'Mail Subtitle',
-        avatar: gravatar.url(name, { d: 'retro' }) // 'https://www.gravatar.com/avatar/' + name + '?d=retro',
-      }
-      */
-    ],
-    // Post:      TMessageList;
+    items: [],
+    play: null,
+
     tickets: [
       {
         active: false,
@@ -76,6 +68,9 @@ function createPlayer (id, name) {
         payed: false
       }
     ],
+    countMails: function () {
+      return this.mails.length + this.newMails.length
+    },
 
     addBill: function (msg) {
       let payed = false
@@ -111,24 +106,39 @@ function createPlayer (id, name) {
       // this.mails += 1
       // this.post.nextCard
       // this.mail.addFromCard(this.post.currentMessage)
-      this.mails.push({
+
+      let cost = 0
+      if (mail.cost) { cost += mail.cost }
+      if (mail.obligation) { cost += mail.obligation }
+
+      this.newMails.push({
+        day: this.day,
         from: mail.from,
         avatar: gravatar.url(mail.from, { d: 'retro' }), // 'https://www.gravatar.com/avatar/' + name + '?d=retro',
-        text: mail.text
+        text: mail.text,
+	cost: cost
       })
 
       this.addBill(mail)
 
-      if (mail.game) {
+      if (mail.play) {
+	this.play = mail
         // this.tickets[mail.fromId].cost = mail.cost
         // this.tickets[mail.fromId].active = true
       }
-      console.log(this.money)
+      console.log(this.newMails)
+    },
+    offerItem: function (item) {
+      this.offers.push(item)
     },
     showSplash: function () {
       this.active = true
     },
     turn: function () {
+      this.mails = this.mails.concat(this.newMails)
+      this.newMails = []
+      this.play = null
+
       this.active = false
       for (var i = 1; i <= 2; i++) {
         this.tickets[i].active = false

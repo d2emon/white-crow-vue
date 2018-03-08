@@ -22,6 +22,33 @@
       </v-card>
     </v-dialog>
 
+    <v-dialog v-model="viewMessage" max-width="500px">
+      <v-card v-if="message">
+        <v-card-title>
+          <h1>{{ message.from }}</h1>
+        </v-card-title>
+        <v-card-text>
+          <v-layout row wrap>
+            <v-flex md4>
+              <v-avatar>
+                <img v-bind:src="message.avatar" :alt="message.from">
+              </v-avatar>
+              <template v-if="message.cost">
+                <h1 v-if="message.cost < 0">{{ -message.cost }}</h1>
+                <h1 v-else>{{ message.cost }}</h1>
+              </template>
+            </v-flex>
+            <v-flex md8>
+              {{ message.text }}
+            </v-flex>
+          </v-layout>
+        </v-card-text>
+        <v-card-actions>
+          <v-btn color="primary" flat @click.stop="viewMessage=false">Ok</v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
+
     <v-container grid-list-md text-xs-center>
       <v-layout row wrap>
         <v-flex md12>
@@ -106,20 +133,36 @@
                           </v-card>
                         </v-flex>
                         <v-flex md8>
-                          <v-card v-if="p.mails.length || p.items.length">
-                            <v-card v-if="p.mails.length">
+                            <v-card v-if="p.countMails()">
                               <v-toolbar color="primary" dark>
                                 <v-toolbar-title>Письма</v-toolbar-title>
                                 <v-spacer></v-spacer>
-                                <v-toolbar-title>{{ p.mails.length }}</v-toolbar-title>
+                                <v-toolbar-title>{{ p.countMails() }}</v-toolbar-title>
                                 <v-btn icon>
                                   <v-icon>search</v-icon>
                                 </v-btn>
                               </v-toolbar>
                               <v-list two-line>
-                                <v-subheader v-text="'Today'"></v-subheader>
+                                <v-subheader v-if="p.newMails.length > 0" v-text="'Сегодня'"></v-subheader>
+                                <template v-for="(mail, id) in p.newMails">
+                                  <v-list-tile avatar v-bind:key="'mail-new-' + id" @click="showMessage(mail)">
+                                    <v-list-tile-avatar>
+                                       <template v-if="mail.avatar">
+                                          <img v-bind:src="mail.avatar">
+                                       </template>
+                                       <template v-else>
+                                          <img v-bind:src="p.avatar">
+                                       </template>
+                                    </v-list-tile-avatar>
+                                    <v-list-tile-content>
+                                      <v-list-tile-title v-html="mail.from"></v-list-tile-title>
+                                      <v-list-tile-sub-title v-html="mail.text"></v-list-tile-sub-title>
+                                    </v-list-tile-content>
+                                  </v-list-tile>
+                                </template>
+                                <v-subheader v-if="p.mails.length > 0" v-text="'Прошлые'"></v-subheader>
                                 <template v-for="(mail, id) in p.mails">
-                                  <v-list-tile avatar v-bind:key="'mail-1-' + id" @click="alert(mail.paiment)">
+                                  <v-list-tile avatar v-bind:key="'mail-' + id" @click="showMessage(mail)">
                                     <v-list-tile-avatar>
                                        <template v-if="mail.avatar">
                                           <img v-bind:src="mail.avatar">
@@ -137,30 +180,35 @@
                               </v-list>
                             </v-card>
                             <br />
+                          <v-card v-if="p.mails.length || p.items.length">
                             <v-card v-if="p.items.length">
-                              <!--
-                                  <v-toolbar color="primary" dark>
-                                    <v-toolbar-title>Товары</v-toolbar-title>
-                                    <v-spacer></v-spacer>
-                                    <v-toolbar-title>{{ p.items }}</v-toolbar-title>
-                                    <v-btn icon>
-                                      <v-icon>search</v-icon>
-                                    </v-btn>
-                                  </v-toolbar>
-                                  <v-list two-line>
-                                    <template v-for="(item, id) in p.item">
-                                      <v-list-tile avatar v-bind:key="'item-1-' + id + '-' + item.title" @click="alert(item.avatar)">
-                                        <v-list-tile-avatar>
-                                          <img v-bind:src="item.avatar">
-                                        </v-list-tile-avatar>
-                                        <v-list-tile-content>
-                                          <v-list-tile-title v-html="item.title"></v-list-tile-title>
-                                          <v-list-tile-sub-title v-html="item.subtitle"></v-list-tile-sub-title>
-                                        </v-list-tile-content>
-                                      </v-list-tile>
-                                    </template>
-                                  </v-list>
-                              -->
+                              <v-toolbar color="primary" dark>
+                                <v-toolbar-title>Товары</v-toolbar-title>
+                                <v-spacer></v-spacer>
+                                <v-toolbar-title>{{ p.items.length }}</v-toolbar-title>
+                                <v-btn icon>
+                                  <v-icon>search</v-icon>
+                                </v-btn>
+                              </v-toolbar>
+                              <v-list two-line>
+                                <template v-for="(item, id) in p.items">
+                                  <v-list-tile avatar v-bind:key="'item-1-' + id + '-' + item.title" @click="alert(item.avatar)">
+                                    <v-list-tile-avatar>
+                                      <img v-bind:src="item.avatar">
+                                      <template v-if="item.avatar">
+                                        <img v-bind:src="item.avatar">
+                                      </template>
+                                      <template v-else>
+                                        <img v-bind:src="p.avatar">
+                                      </template>
+                                    </v-list-tile-avatar>
+                                    <v-list-tile-content>
+                                      <v-list-tile-title v-html="item.title"></v-list-tile-title>
+                                      <v-list-tile-sub-title v-if="item.description" v-html="item.description"></v-list-tile-sub-title>
+                                    </v-list-tile-content>
+                                  </v-list-tile>
+                                </template>
+                              </v-list>
                             </v-card>
                           </v-card>
                         </v-flex>
@@ -195,7 +243,10 @@ export default {
       activePlayer: '' + this.$store.state.game.Turns.turn,
       fieldDate: 0,
       fieldName: 0,
-      motd: true
+      motd: true,
+
+      viewMessage: false,
+      message: null
     }
   },
   methods: {
@@ -232,6 +283,10 @@ export default {
     beginTurn: function () {
       this.player.turn()
       this.motd = true
+    },
+    showMessage: function (message) {
+      this.message = message
+      this.viewMessage = true
     }
   },
   mounted: function () {
@@ -240,6 +295,11 @@ export default {
     console.log(this.players)
     if (!this.players.length) this.$router.push('/set-players')
     if (this.nextPlayer) this.$router.push('new-turn')
+
+    if (this.player.play && this.player.newMails.length) {
+      this.viewMessage = true
+      this.message = this.player.newMails[0]
+    }
   }
 }
 </script>
