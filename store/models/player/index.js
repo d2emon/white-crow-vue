@@ -19,6 +19,7 @@ function createPlayer (id, name) {
     fieldDate: {
       id: 0,
       caption: '0',
+      icon: '',
       useDay: function (player) {
         alert('Use day')
       },

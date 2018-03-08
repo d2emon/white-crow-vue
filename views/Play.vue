@@ -5,23 +5,6 @@
       <v-icon>casino</v-icon>
     </v-btn>
 
-    <v-dialog v-model="motd" max-width="500px">
-      <v-card v-if="player">
-        <v-card-title>
-          День {{ player.day }}
-        </v-card-title>
-        <v-card-text>
-          <h1>{{ player.fieldDate.caption }}</h1>
-          <div>
-            {{ player.fieldDate.message }}
-          </div>
-        </v-card-text>
-        <v-card-actions>
-          <v-btn color="primary" flat @click.stop="motd=false">Ok</v-btn>
-        </v-card-actions>
-      </v-card>
-    </v-dialog>
-
     <v-dialog v-model="viewMessage" max-width="500px">
       <v-card v-if="message">
         <v-card-title>
@@ -130,17 +113,24 @@
                 >
                   <v-card flat>
                     <v-card-text>
-                      <v-layout row wrap>
-                        <v-flex md12>
-                          <v-avatar size="48px">
-                            <img :src="p.avatar" :alt="p.name">
-                          </v-avatar>
-                          <h1>{{ p.name }}</h1>
-                        </v-flex>
-                      </v-layout>
+                      <template v-if="p === player">
+                        <v-alert color="success" v-if="player.fieldDate" v-model="motd" :icon="player.fieldDate.icon" dismissible>
+                          {{ player.fieldDate.message }}
+                        </v-alert>
+                      </template>
                       <v-layout row wrap>
                         <v-flex md4>
                           <v-card>
+                            <v-layout row wrap>
+                              <v-flex md4>
+                                <v-avatar size="48px">
+                                  <img :src="p.avatar" :alt="p.name">
+                                </v-avatar>
+                              </v-flex>
+                              <v-flex md8>
+                                <h1>{{ p.name }}</h1>
+                              </v-flex>
+                            </v-layout>
                             <v-list two-line>
                               <v-list-tile>
                                   <v-list-tile-content>
@@ -297,6 +287,30 @@ export default {
     }
   },
   methods: {
+    beginTurn () {
+      if (!this.player) { return }
+
+      // this.player.turn()
+      this.motd = true
+
+      if (this.player.play && this.player.newMails.length) {
+        this.viewMessage = true
+        this.message = this.player.newMails[0]
+      }
+      console.log(this.player)
+
+      if (this.player.offers.length) {
+        this.viewOffer = true
+        this.offer = this.player.offers[0]
+        this.offered = true
+        this.motd = false
+      }
+
+      if (this.player.play) {
+        this.motd = false
+      }
+      console.log(this.motd)
+    },
     nextTurn () {
       this.$store.dispatch('nextTurn')
       // this.player = game.player()
@@ -327,10 +341,6 @@ export default {
       alert('Field click')
       // fmField.Show;
     },
-    beginTurn: function () {
-      this.player.turn()
-      this.motd = true
-    },
     acceptOffer: function (offer) {
       this.viewOffer = false
       this.offer = null
@@ -353,28 +363,10 @@ export default {
     }
   },
   mounted: function () {
-    console.log(this.$store.getters)
-    console.log(this.game.players)
-    console.log(this.players)
-    if (!this.players.length) {
-      this.$router.push('/set-players')
-      return
-    }
-    if (this.nextPlayer) {
-      this.$router.push('new-turn')
-      return
-    }
+    if (!this.players.length) { this.$router.push('/set-players') }
+    if (this.nextPlayer) { this.$router.push('new-turn') }
 
-    if (this.player.play && this.player.newMails.length) {
-      this.viewMessage = true
-      this.message = this.player.newMails[0]
-    }
-
-    if (this.player.offers.length) {
-      this.viewOffer = true
-      this.offer = this.player.offers[0]
-      this.offered = true
-    }
+    this.beginTurn()
   }
 }
 </script>

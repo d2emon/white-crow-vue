@@ -4,6 +4,7 @@ const dtPost = 1
 
 module.exports = function (date) {
   return {
+    icon: 'mdi-message',
     date: date,
     dateType: dtPost,
     caption: 'Почта',

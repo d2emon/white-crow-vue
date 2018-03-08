@@ -4,6 +4,7 @@ module.exports = {
   dtFree: dtFree,
   FreeDay: function (date) {
     return {
+      icon: 'mdi-emoticon-cool',
       date: date,
       dateType: dtFree,
       caption: 'Выходной',
@@ -12,8 +13,9 @@ module.exports = {
       useDay: function (player) {}
     }
   },
-  PayableDay: function (date, caption, cost, message) {
+  PayableDay: function (date, caption, cost, message, icon) {
     return {
+      icon: icon,
       date: date,
       dateType: dtFree,
       caption: caption,
