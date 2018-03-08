@@ -293,8 +293,6 @@ export default {
     },
     turnClick: function () {
       this.$store.dispatch('nextTurn')
-      alert(this.game.turnId())
-      // this.activePlayer = '' + this.game.playerId
       this.useDay()
     },
     fieldClick: function () {

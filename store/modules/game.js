@@ -58,6 +58,9 @@ const getters = {
 }
 
 const mutations = {
+  start: function (state) {
+    state.Game.create()
+  },
   clearPlayers: function (state) {
     state.players = []
   },
@@ -74,7 +77,6 @@ const mutations = {
   },
   nextTurn: function (state) {
     state.Game.nextTurn()
-    alert(state.Turns.turn)
   },
   playerTurn: function (state) {
     state.Game.player().turn()

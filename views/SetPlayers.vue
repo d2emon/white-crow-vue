@@ -98,16 +98,15 @@ export default {
   methods: {
     askPlayers: function (count) {
       this.count = count
-      this.addPlayers(count)
-    },
-    addPlayers: function (count) {
-      if (count <= 0) count = this.count
 
-      this.$store.commit('addPlayers', count)
-      this.$store.commit('nextRound')
+      this.$store.commit('start')
+      this.addPlayers()
+    },
+    addPlayers: function () {
+      this.$store.commit('addPlayers', this.count)
     },
     setPlayerNames: function (e) {
-      // game = TWCGame.Create(3, this.count)
+      this.$store.commit('nextRound')
       this.$router.push('/new-turn')
     }
   },
