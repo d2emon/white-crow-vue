@@ -134,6 +134,13 @@
                             <v-list two-line>
                               <v-list-tile>
                                   <v-list-tile-content>
+                                    <v-list-tile-title>День:</v-list-tile-title>
+                                    <v-list-tile-sub-title>{{ p.fieldDate.caption }}</v-list-tile-sub-title>
+                                  </v-list-tile-content>
+                                  <v-list-tile-action>{{ p.day }}</v-list-tile-action>
+                              </v-list-tile>
+                              <v-list-tile>
+                                  <v-list-tile-content>
                                     <v-list-tile-title>Наличные:</v-list-tile-title>
                                   </v-list-tile-content>
                                   <v-list-tile-action>{{ p.money.cash }}$</v-list-tile-action>
@@ -146,10 +153,9 @@
                               </v-list-tile>
                               <v-list-tile>
                                   <v-list-tile-content>
-                                    <v-list-tile-title>День:</v-list-tile-title>
-                                    <v-list-tile-sub-title>{{ p.fieldDate.caption }}</v-list-tile-sub-title>
+                                    <v-list-tile-title>Оплатить:</v-list-tile-title>
                                   </v-list-tile-content>
-                                  <v-list-tile-action>{{ p.day }}</v-list-tile-action>
+                                  <v-list-tile-action>{{ p.money.bills }}$</v-list-tile-action>
                               </v-list-tile>
                               <v-list-tile>
                                   <v-list-tile-content>
@@ -297,7 +303,6 @@ export default {
         this.viewMessage = true
         this.message = this.player.newMails[0]
       }
-      console.log(this.player)
 
       if (this.player.offers.length) {
         this.viewOffer = true
@@ -309,7 +314,6 @@ export default {
       if (this.player.play) {
         this.motd = false
       }
-      console.log(this.motd)
     },
     nextTurn () {
       this.$store.dispatch('nextTurn')
