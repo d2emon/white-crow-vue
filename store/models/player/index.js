@@ -129,7 +129,18 @@ function createPlayer (id, name) {
       console.log(this.newMails)
     },
     offerItem: function (item) {
-      this.offers.push(item)
+      this.offers.push({
+        title: item.title,
+        cost: item.cost,
+        price: item.price,
+        comission: item.comission,
+        avatar: gravatar.url(item.title, { d: 'retro' }) // 'https://www.gravatar.com/avatar/' + name + '?d=retro',
+      })
+    },
+    addItem: function (item) {
+      this.items.push(item)
+      console.log(item)
+      console.log(this.items)
     },
     showSplash: function () {
       this.active = true
@@ -138,6 +149,7 @@ function createPlayer (id, name) {
       this.mails = this.mails.concat(this.newMails)
       this.newMails = []
       this.play = null
+      this.offers = []
 
       this.active = false
       for (var i = 1; i <= 2; i++) {

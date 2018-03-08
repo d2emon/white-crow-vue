@@ -49,6 +49,55 @@
       </v-card>
     </v-dialog>
 
+    <v-dialog v-model="viewOffer" max-width="500px">
+      <v-card v-if="offer">
+        <v-card-title>
+          <h1>{{ offer.title }}</h1>
+        </v-card-title>
+        <v-card-text>
+          <v-layout row wrap>
+            <v-flex md4>
+              <v-avatar>
+                <img v-bind:src="offer.avatar" :alt="offer.title">
+              </v-avatar>
+            </v-flex>
+            <v-flex md8>
+              <v-list one-line>
+                <v-list-tile>
+                  <v-list-tile-content>
+                    <v-list-tile-title>Цена:</v-list-tile-title>
+                  </v-list-tile-content>
+                  <v-list-tile-action>{{ offer.cost }} монет</v-list-tile-action>
+                </v-list-tile>
+                <v-list-tile>
+                  <v-list-tile-content>
+                    <v-list-tile-title>Стоимость:</v-list-tile-title>
+                  </v-list-tile-content>
+                  <v-list-tile-action>{{ offer.price }} монет</v-list-tile-action>
+                </v-list-tile>
+                <v-list-tile>
+                  <v-list-tile-content>
+                    <v-list-tile-title>Комисионные:</v-list-tile-title>
+                  </v-list-tile-content>
+                  <v-list-tile-action>{{ offer.comission }} монет</v-list-tile-action>
+                </v-list-tile>
+              </v-list>
+            </v-flex>
+          </v-layout>
+        </v-card-text>
+        <v-card-actions>
+          <template v-if="!offered">
+            <v-btn color="primary" flat @click.stop="viewOffer=false">Ok</v-btn>
+          </template>
+          <template v-else>
+            <v-spacer />
+            <v-btn color="success" flat @click.stop="acceptOffer(offer)">Да</v-btn>
+            <v-btn color="error" flat @click.stop="declineOffer(offer)">Нет</v-btn>
+          </template>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
+
     <v-container grid-list-md text-xs-center>
       <v-layout row wrap>
         <v-flex md12>
@@ -192,15 +241,9 @@
                               </v-toolbar>
                               <v-list two-line>
                                 <template v-for="(item, id) in p.items">
-                                  <v-list-tile avatar v-bind:key="'item-1-' + id + '-' + item.title" @click="alert(item.avatar)">
+                                  <v-list-tile avatar v-bind:key="'item-1-' + id + '-' + item.title" @click="showItem(item)">
                                     <v-list-tile-avatar>
                                       <img v-bind:src="item.avatar">
-                                      <template v-if="item.avatar">
-                                        <img v-bind:src="item.avatar">
-                                      </template>
-                                      <template v-else>
-                                        <img v-bind:src="p.avatar">
-                                      </template>
                                     </v-list-tile-avatar>
                                     <v-list-tile-content>
                                       <v-list-tile-title v-html="item.title"></v-list-tile-title>
@@ -246,7 +289,11 @@ export default {
       motd: true,
 
       viewMessage: false,
-      message: null
+      message: null,
+
+      offered: false,
+      viewOffer: false,
+      offer: null
     }
   },
   methods: {
@@ -284,6 +331,22 @@ export default {
       this.player.turn()
       this.motd = true
     },
+    acceptOffer: function (offer) {
+      this.viewOffer = false
+      this.offer = null
+      this.offered = false
+      this.$store.commit('addItem', offer)
+    },
+    declineOffer: function (offer) {
+      this.viewOffer = false
+      this.offer = null
+      this.offered = false
+    },
+    showItem: function (item) {
+      this.viewOffer = true
+      this.offer = item
+      this.offered = false
+    },
     showMessage: function (message) {
       this.message = message
       this.viewMessage = true
@@ -293,12 +356,24 @@ export default {
     console.log(this.$store.getters)
     console.log(this.game.players)
     console.log(this.players)
-    if (!this.players.length) this.$router.push('/set-players')
-    if (this.nextPlayer) this.$router.push('new-turn')
+    if (!this.players.length) {
+      this.$router.push('/set-players')
+      return
+    }
+    if (this.nextPlayer) {
+      this.$router.push('new-turn')
+      return
+    }
 
     if (this.player.play && this.player.newMails.length) {
       this.viewMessage = true
       this.message = this.player.newMails[0]
+    }
+
+    if (this.player.offers.length) {
+      this.viewOffer = true
+      this.offer = this.player.offers[0]
+      this.offered = true
     }
   }
 }

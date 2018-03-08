@@ -72,6 +72,9 @@ const mutations = {
   addPlayers: function (state, count) {
     state.Game.addPlayers(count)
   },
+  addItem: function (state, item) {
+    state.Game.player().addItem(item)
+  },
   nextRound: function (state) {
     state.Game.nextRound()
   },
