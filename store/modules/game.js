@@ -51,10 +51,7 @@ const getters = {
   round: (state) => { return state.Turns.round },
 
   players: (state) => { return state.Game.players },
-  player: function (state) {
-    console.log(state)
-    return state.Game.player()
-  }
+  player: function (state) { return state.Game.player() }
 }
 
 const mutations = {

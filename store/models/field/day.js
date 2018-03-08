@@ -8,7 +8,7 @@ module.exports = {
       date: date,
       dateType: dtFree,
       caption: 'Выходной',
-      message: '',
+      message: 'Выходной',
       cost: 0,
       useDay: function (player) {}
     }

@@ -15,10 +15,10 @@ function createPlayer (id, name) {
       bills: 0,
       pay: function (value) {
         if (value <= this.cash) {
-	  this.cash -= value
-	}
-	this.account -= (value - this.cash)
-	this.cash = 0
+          this.cash -= value
+        }
+        this.account -= (value - this.cash)
+        this.cash = 0
       }
     },
     day: 0,
@@ -124,25 +124,32 @@ function createPlayer (id, name) {
         from: mail.from,
         avatar: gravatar.url(mail.from, { d: 'retro' }), // 'https://www.gravatar.com/avatar/' + name + '?d=retro',
         text: mail.text,
-	cost: cost
+        cost: cost
       })
 
       this.addBill(mail)
 
       if (mail.play) {
-	this.play = mail
+        this.play = mail
         // this.tickets[mail.fromId].cost = mail.cost
         // this.tickets[mail.fromId].active = true
       }
       console.log(this.newMails)
     },
     offerItem: function (item) {
+      console.log(item)
+      let image = ''
+      if (item.image) {
+        image = '/static/images/items/' + item.image
+      } else {
+        image = gravatar.url(item.title, { d: 'retro' })
+      }
       this.offers.push({
         title: item.title,
         cost: item.cost,
         price: item.price,
         comission: item.comission,
-        avatar: gravatar.url(item.title, { d: 'retro' }) // 'https://www.gravatar.com/avatar/' + name + '?d=retro',
+        avatar: image
       })
     },
     addItem: function (item) {
@@ -174,8 +181,12 @@ function createPlayer (id, name) {
 
       this.fieldDate = Field.getDate(this.day)
 
-      this.total.cost = this.fieldDate.cost
-      this.money.cash += this.total.cost
+      if (this.fieldDate.cost < 0) {
+        this.money.pay(-this.fieldDate.cost)
+      } else {
+        this.total.cost = this.fieldDate.cost
+        this.money.cash += this.total.cost
+      }
 
       this.fieldDate.useDay(this)
     },

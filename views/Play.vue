@@ -40,7 +40,7 @@
         <v-card-text>
           <v-layout row wrap>
             <v-flex md4>
-              <v-avatar>
+              <v-avatar :size="128">
                 <img v-bind:src="offer.avatar" :alt="offer.title">
               </v-avatar>
             </v-flex>
@@ -65,6 +65,9 @@
                   <v-list-tile-action>{{ offer.comission }} монет</v-list-tile-action>
                 </v-list-tile>
               </v-list>
+            </v-flex>
+            <v-flex md12>
+              {{ offer.description }}
             </v-flex>
           </v-layout>
         </v-card-text>
@@ -248,6 +251,32 @@
                                   </v-list-tile>
                                 </template>
                               </v-list>
+
+                              <!-- v-container fluid grid-list-md>
+                                <v-layout row wrap>
+                                  <v-flex
+                                    xs4
+                                    v-for="(item, id) in p.items"
+                                    :key="'item-' + id"
+                                    @click="showItem(item)"
+                                  >
+                                    <v-card @click="showItem(item)">
+                                      <v-card-media
+                                        :src="item.avatar"
+                                        height="200px"
+                                      >
+                                        <v-container fill-height fluid>
+                                          <v-layout fill-height>
+                                            <v-flex xs12 align-end flexbox>
+                                              <span class="headline" v-text="item.title"/>
+                                            </v-flex>
+                                          </v-layout>
+                                        </v-container>
+                                      </v-card-media>
+                                    </v-card>
+                                  </v-flex>
+                                </v-layout>
+                              </v-container -->
                             </v-card>
                           </v-card>
                         </v-flex>

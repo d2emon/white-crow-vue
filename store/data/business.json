@@ -1,92 +1,114 @@
 [
   {
-    "title": "Чучело Кинг-Конга",
-    "cost": 700,
-    "price": 1400,
-    "comission": 70
-  },
-  {
-    "title": "Автомобиль \"Ягуар\"",
-    "cost": 1100,
-    "price": 1600,
-    "comission": 110
-  },
-  {
-    "title": "Перо павлина",
-    "cost": 300,
-    "price": 650,
-    "comission": 30
-  },
-  {
-    "title": "Бивни мамонта",
-    "cost": 800,
-    "price": 1200,
-    "comission": 80
-  },
-  {
-    "title": "Золотой намордник",
-    "cost": 950,
-    "price": 1400,
-    "comission": 95
-  },
-  {
-    "title": "Стадо божьих коровок",
-    "cost": 200,
-    "price": 550,
-    "comission": 20
-  },
-  {
-    "title": "Картина Шишкина",
-    "cost": 1000,
-    "price": 2500,
-    "comission": 100
-  },
-  {
-    "title": "Рукопись книги \"Маугли\"",
-    "cost": 700,
-    "price": 1400,
-    "comission": 70
-  },
-  {
-    "title": "Спортивная одежда \"Пума\"",
-    "cost": 350,
-    "price": 600,
-    "comission": 50
-  },
-  {
-    "title": "Коллекция охотничьих билетов",
-    "cost": 350,
-    "price": 600,
-    "comission": 50
-  },
-  {
+    "image": "konserva.jpg",
     "title": "Консервы из морской капусты",
     "cost": 150,
     "price": 400,
     "comission": 30
   },
   {
-    "title": "Права на показ фильма \"Челюсти\"",
-    "cost": 1500,
-    "price": 2500,
-    "comission": 100
+    "image": "rakolovka.jpg",
+    "title": "Коллекция раколовок",
+    "cost": 200,
+    "price": 550,
+    "comission": 20
   },
   {
+    "image": "puma.jpg",
+    "title": "Спортивная одежда \"Пума\"",
+    "cost": 350,
+    "price": 600,
+    "comission": 50
+  },
+  {
+    "image": "bilet.jpg",
+    "title": "Коллекция охотничьих билетов",
+    "cost": 350,
+    "price": 600,
+    "comission": 50
+  },
+  {
+    "image": "kingkong.jpg",
+    "title": "Чучело Кинг-Конга",
+    "cost": 700,
+    "price": 1400,
+    "comission": 70
+  },
+  {
+    "image": "korovka.jpg",
+    "title": "Стадо божьих коровок",
+    "cost": 200,
+    "price": 550,
+    "comission": 20
+  },
+  {
+    "image": "feather.jpg",
+    "title": "Перо павлина",
+    "cost": 300,
+    "price": 650,
+    "comission": 30
+  },
+  {
+    "image": "durrell.jpg",
+    "title": "Автограф Дж. Даррелла",
+    "cost": 350,
+    "price": 600,
+    "comission": 35
+  },
+  {
+    "image": "script.jpg",
+    "title": "Рукопись книги \"Маугли\"",
+    "cost": 700,
+    "price": 1400,
+    "comission": 70
+  },
+  {
+    "image": "mammoth.jpg",
+    "title": "Бивни мамонта",
+    "cost": 800,
+    "price": 1200,
+    "comission": 80
+  },
+  {
+    "image": "nest.jpg",
     "title": "Ресторан \"Ласточкино гнездо\"",
     "cost": 1500,
     "price": 2000,
     "comission": 150
   },
   {
+    "image": "jaguar.jpg",
+    "title": "Автомобиль \"Ягуар\"",
+    "cost": 1100,
+    "price": 1600,
+    "comission": 110
+  },
+  {
+    "image": "namordnik.jpg",
+    "title": "Золотой намордник",
+    "cost": 950,
+    "price": 1400,
+    "comission": 95
+  },
+  {
+    "image": "jaws.jpg",
+    "title": "Права на показ фильма \"Челюсти\"",
+    "cost": 1500,
+    "price": 2500,
+    "comission": 100
+  },
+  {
+    "image": "shishkin.jpg",
+    "title": "Картина Шишкина",
+    "cost": 1000,
+    "price": 2500,
+    "comission": 100
+  },
+  {
+    "image": "sedlo.jpg",
     "title": "Седло Конька-Горбунка",
     "cost": 500,
     "price": 900,
     "comission": 50
-  },
-  {
-    "title": "Автограф Дж. Даррелла",
-    "cost": 350,
-    "price": 600,
-    "comission": 35
   }
 ]

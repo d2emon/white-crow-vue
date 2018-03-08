@@ -14,6 +14,7 @@ module.exports = function (date) {
       let id = Math.floor(Math.random() * this.items.length)
       let item = this.items[id]
 
+      console.log(item)
       player.offerItem(item)
     }
   }
