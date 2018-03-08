@@ -10,7 +10,9 @@ function createPlayer (id, name) {
     // Money:     TMoney;
     money: {
       cash: 325,
-      account: 0
+      account: 0,
+      obligations: 0,
+      bills: 0
     },
     day: 0,
     // FieldDate: TFieldDate;
@@ -38,34 +40,12 @@ function createPlayer (id, name) {
       bank: 0,
       month: 0
     },
+
     // Messages:  TMessageList;
     // mail: this.messages
-    mail: [
+    mails: [],
+    items: [
       /*
-      {
-        title: name,
-        subtitle: 'Mail Subtitle',
-        avatar: gravatar.url(name, { d: 'retro' }) // 'https://www.gravatar.com/avatar/' + name + '?d=retro',
-      },
-      {
-        title: name,
-        subtitle: 'Mail Subtitle',
-        avatar: gravatar.url(name, { d: 'retro' }) // 'https://www.gravatar.com/avatar/' + name + '?d=retro',
-      },
-      {
-        title: name,
-        subtitle: 'Mail Subtitle',
-        avatar: gravatar.url(name, { d: 'retro' }) // 'https://www.gravatar.com/avatar/' + name + '?d=retro',
-      }
-      */
-    ],
-    item: [
-      /*
-      {
-        title: name,
-        subtitle: 'Mail Subtitle',
-        avatar: gravatar.url(name, { d: 'retro' }) // 'https://www.gravatar.com/avatar/' + name + '?d=retro',
-      },
       {
         title: name,
         subtitle: 'Mail Subtitle',
@@ -97,44 +77,53 @@ function createPlayer (id, name) {
       }
     ],
 
-    mails: 0,
-    items: 0,
+    addBill: function (msg) {
+      let payed = false
+      if (this.tickets[msg.fromId]) { payed = this.tickets[msg.fromId].payed }
+      if (payed) { return }
 
-    addBill: function (post) {
-      /*
-      if (!this.tickets[post.fromId].payed) {
-        this.total.bills += post.cost
-      }
-      */
-    },
-    doPost: function () {
-      this.mails += 1
-      /*
-      this.post.nextCard
-      this.mail.addFromCard(this.post.currentMessage)
-
-      if (this.mail.currentMessage.cardType = mtNone) {
-        if (this.mail.currentMessage.cost < 0) {
-          this.addBill(this.mail.currentMessage)
+      // if (!msg.cost) { return }
+      // let cost = parseInt(msg.cost)
+      if (msg.cost) {
+        if (msg.cost < 0) {
+          this.money.bills += msg.cost
+          // this.total.bills += post.cost
         } else {
-          this.money.cash  += this.mail.currentMessage.cost
+          this.money.cash += msg.cost
         }
       }
 
-      if (this.mail.currentMessage.cardType = mtObligation) {
-        // Total.Bills := Total.Bills + Messages.CurrentMessage.Cost
+      if (msg.obligation) {
+        this.money.obligations += msg.obligation
+        // this.total.bills += mail.obligation
       }
 
-      if (this.mail.currentMessage.cardType = mtTicket) {
-        this.tickets[this.mail.currentMessage.fromId].cost = this.mail.currentMessage.cost
-        this.tickets[this.mail.currentMessage.fromId].active = true
+      if (msg.fromId) {
+        this.tickets[msg.fromId].cost = msg.cost
+        this.tickets[msg.fromId].active = true
       }
+    },
+    addMail: function (mail) {
+      if (!mail) { return }
 
-      if (this.mail.currentMessage.cardType = mtPlay) {
-        this.tickets[this.mail.currentMessage.fromId].cost = this.mail.currentMessage.cost
-        this.tickets[this.mail.currentMessage.fromId].active = true
+      console.log(mail)
+
+      // this.mails += 1
+      // this.post.nextCard
+      // this.mail.addFromCard(this.post.currentMessage)
+      this.mails.push({
+        from: mail.from,
+        avatar: gravatar.url(mail.from, { d: 'retro' }), // 'https://www.gravatar.com/avatar/' + name + '?d=retro',
+        text: mail.text
+      })
+
+      this.addBill(mail)
+
+      if (mail.game) {
+        // this.tickets[mail.fromId].cost = mail.cost
+        // this.tickets[mail.fromId].active = true
       }
-      */
+      console.log(this.money)
     },
     showSplash: function () {
       this.active = true

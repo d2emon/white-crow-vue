@@ -66,7 +66,7 @@ export default {
   computed: {
     player: function () { return this.$store.getters.player },
     day: function () { return this.player ? this.player.day : false },
-    mails: function () { return this.player ? this.player.mails.legth : false },
+    mails: function () { return this.player ? this.player.mails.length : false },
     items: function () { return this.player ? this.player.items.length : false },
     menuItems: function () {
       return [

@@ -53,39 +53,39 @@
                   :id="p.id"
                 >
                   <v-card flat>
-                      <v-card-text>
-                        <v-layout row wrap>
-                          <v-flex md12>
-                            <v-avatar size="48px">
-                              <img :src="p.avatar" :alt="p.name">
-                            </v-avatar>
-                            <h1>{{ p.name }}</h1>
-                          </v-flex>
-                        </v-layout>
-                        <v-layout row wrap>
-                          <v-flex md4>
-                            <v-card>
-                              <v-list two-line>
-                                <v-list-tile>
+                    <v-card-text>
+                      <v-layout row wrap>
+                        <v-flex md12>
+                          <v-avatar size="48px">
+                            <img :src="p.avatar" :alt="p.name">
+                          </v-avatar>
+                          <h1>{{ p.name }}</h1>
+                        </v-flex>
+                      </v-layout>
+                      <v-layout row wrap>
+                        <v-flex md4>
+                          <v-card>
+                            <v-list two-line>
+                              <v-list-tile>
                                   <v-list-tile-content>
                                     <v-list-tile-title>Наличные:</v-list-tile-title>
                                   </v-list-tile-content>
                                   <v-list-tile-action>{{ p.money.cash }}$</v-list-tile-action>
-                                </v-list-tile>
-                                <v-list-tile>
+                              </v-list-tile>
+                              <v-list-tile>
                                   <v-list-tile-content>
                                     <v-list-tile-title>В банке:</v-list-tile-title>
                                   </v-list-tile-content>
                                   <v-list-tile-action>{{ p.money.account }}$</v-list-tile-action>
-                                </v-list-tile>
-                                <v-list-tile>
+                              </v-list-tile>
+                              <v-list-tile>
                                   <v-list-tile-content>
                                     <v-list-tile-title>День:</v-list-tile-title>
                                     <v-list-tile-sub-title>{{ p.fieldDate.caption }}</v-list-tile-sub-title>
                                   </v-list-tile-content>
                                   <v-list-tile-action>{{ p.day }}</v-list-tile-action>
-                                </v-list-tile>
-                                <v-list-tile>
+                              </v-list-tile>
+                              <v-list-tile>
                                   <v-list-tile-content>
                                     <v-list-tile-title>Бросок:</v-list-tile-title>
                                   </v-list-tile-content>
@@ -93,58 +93,52 @@
                                     <v-icon large v-if="(p.dice.score > 0) && (p.dice.score < 7)">mdi-dice-{{ p.dice.score }}</v-icon>
                                     <v-icon large v-else>mdi-dice-multiple</v-icon>
                                   </v-list-tile-action>
-                                </v-list-tile>
-                                <v-list-tile>
+                              </v-list-tile>
+                              <v-list-tile>
                                   <v-list-tile-content>
                                     <v-list-tile-title>Банк:</v-list-tile-title>
-                                  </v-list-tile-content>
-                                  <v-list-tile-action>
+                                </v-list-tile-content>
+                                <v-list-tile-action>
                                     <v-text-field name="player-bank" single-line readonly label="Bank" :value="p.total.bank"></v-text-field>
-                                  </v-list-tile-action>
-                                </v-list-tile>
+                                </v-list-tile-action>
+                              </v-list-tile>
+                            </v-list>
+                          </v-card>
+                        </v-flex>
+                        <v-flex md8>
+                          <v-card v-if="p.mails.length || p.items.length">
+                            <v-card v-if="p.mails.length">
+                              <v-toolbar color="primary" dark>
+                                <v-toolbar-title>Письма</v-toolbar-title>
+                                <v-spacer></v-spacer>
+                                <v-toolbar-title>{{ p.mails.length }}</v-toolbar-title>
+                                <v-btn icon>
+                                  <v-icon>search</v-icon>
+                                </v-btn>
+                              </v-toolbar>
+                              <v-list two-line>
+                                <v-subheader v-text="'Today'"></v-subheader>
+                                <template v-for="(mail, id) in p.mails">
+                                  <v-list-tile avatar v-bind:key="'mail-1-' + id" @click="alert(mail.paiment)">
+                                    <v-list-tile-avatar>
+                                       <template v-if="mail.avatar">
+                                          <img v-bind:src="mail.avatar">
+                                       </template>
+                                       <template v-else>
+                                          <img v-bind:src="p.avatar">
+                                       </template>
+                                    </v-list-tile-avatar>
+                                    <v-list-tile-content>
+                                      <v-list-tile-title v-html="mail.from"></v-list-tile-title>
+                                      <v-list-tile-sub-title v-html="mail.text"></v-list-tile-sub-title>
+                                    </v-list-tile-content>
+                                  </v-list-tile>
+                                </template>
                               </v-list>
                             </v-card>
-                          </v-flex>
-                          <v-flex md8>
-                            <v-card v-if="p.mails.length || p.items.length">
-                              <v-card v-if="p.mails.length">
-                                  <v-toolbar color="primary" dark>
-                                    <v-toolbar-title>Письма</v-toolbar-title>
-                                    <v-spacer></v-spacer>
-                                    <v-toolbar-title>{{ p.mails }}</v-toolbar-title>
-                                    <v-btn icon>
-                                      <v-icon>search</v-icon>
-                                    </v-btn>
-                                  </v-toolbar>
-                                  <v-list two-line>
-                                    <v-subheader v-text="'Today'"></v-subheader>
-                                    <template v-for="(mail, id) in p.mail">
-                                      <v-list-tile avatar v-bind:key="'mail-1-' + id + '-' + mail.title" @click="alert(p.mail)">
-                                        <v-list-tile-avatar>
-                                          <img v-bind:src="mail.avatar">
-                                        </v-list-tile-avatar>
-                                        <v-list-tile-content>
-                                          <v-list-tile-title v-html="mail.title"></v-list-tile-title>
-                                          <v-list-tile-sub-title v-html="mail.subtitle"></v-list-tile-sub-title>
-                                        </v-list-tile-content>
-                                      </v-list-tile>
-                                    </template>
-                                    <v-subheader v-text="'Today'"></v-subheader>
-                                    <template v-for="(mail, id) in p.mail">
-                                      <v-list-tile avatar v-bind:key="'mail-2-' + id + '-' + mail.title" @click="alert(p.mail)">
-                                        <v-list-tile-avatar>
-                                          <img v-bind:src="mail.avatar">
-                                        </v-list-tile-avatar>
-                                        <v-list-tile-content>
-                                          <v-list-tile-title v-html="mail.title"></v-list-tile-title>
-                                          <v-list-tile-sub-title v-html="mail.subtitle"></v-list-tile-sub-title>
-                                        </v-list-tile-content>
-                                      </v-list-tile>
-                                    </template>
-                                  </v-list>
-                              </v-card>
-                              <br />
-                              <v-card v-if="p.items.length">
+                            <br />
+                            <v-card v-if="p.items.length">
+                              <!--
                                   <v-toolbar color="primary" dark>
                                     <v-toolbar-title>Товары</v-toolbar-title>
                                     <v-spacer></v-spacer>
@@ -166,76 +160,12 @@
                                       </v-list-tile>
                                     </template>
                                   </v-list>
-                              </v-card>
+                              -->
                             </v-card>
-                          </v-flex>
-                        </v-layout>
-                            <v-layout row wrap>
-                              <v-flex md6>
-                                <v-card>
-                                  <v-toolbar color="primary" dark>
-                                    <v-toolbar-title>Письма</v-toolbar-title>
-                                    <v-spacer></v-spacer>
-                                    <v-toolbar-title>{{ p.mails }}</v-toolbar-title>
-                                    <v-btn icon>
-                                      <v-icon>search</v-icon>
-                                    </v-btn>
-                                  </v-toolbar>
-                                  <v-list two-line>
-                                    <v-subheader v-text="'Today'"></v-subheader>
-                                    <template v-for="(mail, id) in p.mail">
-                                      <v-list-tile avatar v-bind:key="'mail-3-' + id + '-' + mail.title" @click="alert(mail.avatar)">
-                                        <v-list-tile-avatar>
-                                          <img v-bind:src="mail.avatar">
-                                        </v-list-tile-avatar>
-                                        <v-list-tile-content>
-                                          <v-list-tile-title v-html="mail.title"></v-list-tile-title>
-                                          <v-list-tile-sub-title v-html="mail.subtitle"></v-list-tile-sub-title>
-                                        </v-list-tile-content>
-                                      </v-list-tile>
-                                    </template>
-                                    <v-subheader v-text="'Today'"></v-subheader>
-                                    <template v-for="(mail, id) in p.mail">
-                                      <v-list-tile avatar v-bind:key="'mail-4-' + id + '-' + mail.title" @click="alert(mail.avatar)">
-                                        <v-list-tile-avatar>
-                                          <img v-bind:src="mail.avatar">
-                                        </v-list-tile-avatar>
-                                        <v-list-tile-content>
-                                          <v-list-tile-title v-html="mail.title"></v-list-tile-title>
-                                          <v-list-tile-sub-title v-html="mail.subtitle"></v-list-tile-sub-title>
-                                        </v-list-tile-content>
-                                      </v-list-tile>
-                                    </template>
-                                  </v-list>
-                                </v-card>
-                              </v-flex>
-                              <v-flex md6>
-                                <v-card>
-                                  <v-toolbar color="primary" dark>
-                                    <v-toolbar-title>Товары</v-toolbar-title>
-                                    <v-spacer></v-spacer>
-                                    <v-toolbar-title>{{ p.items }}</v-toolbar-title>
-                                    <v-btn icon>
-                                      <v-icon>search</v-icon>
-                                    </v-btn>
-                                  </v-toolbar>
-                                  <v-list two-line>
-                                    <template v-for="(item, id) in p.item">
-                                      <v-list-tile avatar v-bind:key="'item-2-' + id + '-' + item.title" @click="alert(item.avatar)">
-                                        <v-list-tile-avatar>
-                                          <img v-bind:src="item.avatar">
-                                        </v-list-tile-avatar>
-                                        <v-list-tile-content>
-                                          <v-list-tile-title v-html="item.title"></v-list-tile-title>
-                                          <v-list-tile-sub-title v-html="item.subtitle"></v-list-tile-sub-title>
-                                        </v-list-tile-content>
-                                      </v-list-tile>
-                                    </template>
-                                  </v-list>
-                                </v-card>
-                              </v-flex>
-                            </v-layout>
-                      </v-card-text>
+                          </v-card>
+                        </v-flex>
+                      </v-layout>
+                    </v-card-text>
                   </v-card>
                 </v-tab-item>
               </v-tabs-items>

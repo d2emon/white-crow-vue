@@ -86,20 +86,18 @@ var field = {
       var fd = this.fieldData[d]
       this.locations.push(fd)
     }
+  },
+  getDate: function (date) {
+    if (!this.locations.length) { return null }
+
+    var fd = this.locations[date]
+    if (!fd.useDay) {
+      fd.useDay = useDay
+    }
+    return fd
   }
 }
 
 field.create()
 
-function getDate (date) {
-  var fd = field.locations[date]
-  if (!fd.useDay) {
-    fd.useDay = useDay
-  }
-  return fd
-}
-
-module.exports = {
-  field: field,
-  getDate: getDate
-}
+module.exports = field
