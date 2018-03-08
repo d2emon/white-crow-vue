@@ -12,7 +12,14 @@ function createPlayer (id, name) {
       cash: 325,
       account: 0,
       obligations: 0,
-      bills: 0
+      bills: 0,
+      pay: function (value) {
+        if (value <= this.cash) {
+	  this.cash -= value
+	}
+	this.account -= (value - this.cash)
+	this.cash = 0
+      }
     },
     day: 0,
     // FieldDate: TFieldDate;
@@ -139,6 +146,7 @@ function createPlayer (id, name) {
       })
     },
     addItem: function (item) {
+      this.money.pay(item.cost)
       this.items.push(item)
       console.log(item)
       console.log(this.items)
