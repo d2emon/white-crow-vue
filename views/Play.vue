@@ -5,7 +5,7 @@
       <v-icon>casino</v-icon>
     </v-btn>
 
-    <v-dialog v-model="viewMessage" max-width="500px">
+    <v-dialog v-model="showMessage" max-width="500px">
       <v-card v-if="message">
         <v-card-title>
           <h1>{{ message.from }}</h1>
@@ -193,7 +193,7 @@
                               <v-list two-line>
                                 <v-subheader v-if="p.newMails.length > 0" v-text="'Сегодня'"></v-subheader>
                                 <template v-for="(mail, id) in p.newMails">
-                                  <v-list-tile avatar v-bind:key="'mail-new-' + id" @click="showMessage(mail)">
+                                  <v-list-tile avatar v-bind:key="'mail-new-' + id" @click="viewMessage(mail)">
                                     <v-list-tile-avatar>
                                        <template v-if="mail.avatar">
                                           <img v-bind:src="mail.avatar">
@@ -210,7 +210,7 @@
                                 </template>
                                 <v-subheader v-if="p.mails.length > 0" v-text="'Прошлые'"></v-subheader>
                                 <template v-for="(mail, id) in p.mails">
-                                  <v-list-tile avatar v-bind:key="'mail-' + id" @click="showMessage(mail)">
+                                  <v-list-tile avatar v-bind:key="'mail-' + id" @click="viewMessage(mail)">
                                     <v-list-tile-avatar>
                                        <template v-if="mail.avatar">
                                           <img v-bind:src="mail.avatar">
@@ -240,7 +240,7 @@
                               </v-toolbar>
                               <v-list two-line>
                                 <template v-for="(item, id) in p.items">
-                                  <v-list-tile avatar v-bind:key="'item-1-' + id + '-' + item.title" @click="showItem(item)">
+                                  <v-list-tile avatar v-bind:key="'item-1-' + id + '-' + item.title" @click="viewItem(item)">
                                     <v-list-tile-avatar>
                                       <img v-bind:src="item.avatar">
                                     </v-list-tile-avatar>
@@ -258,9 +258,9 @@
                                     xs4
                                     v-for="(item, id) in p.items"
                                     :key="'item-' + id"
-                                    @click="showItem(item)"
+                                    @click="viewItem(item)"
                                   >
-                                    <v-card @click="showItem(item)">
+                                    <v-card>
                                       <v-card-media
                                         :src="item.avatar"
                                         height="200px"
@@ -300,7 +300,7 @@ export default {
     game: function () { return this.$store.state.game.Game },
     players: function () { return this.$store.getters.players },
     // activePlayer: function () { return this.$store.state.game.activePlayer },
-    player: function () { return this.$store.getters.player },
+    player: function () { return this.$store.state.player.player },
     nextPlayer: function () {
       if (!this.player) return false
       return this.player.active
@@ -313,7 +313,7 @@ export default {
       fieldName: 0,
       motd: true,
 
-      viewMessage: false,
+      showMessage: false,
       message: null,
 
       offered: false,
@@ -323,56 +323,41 @@ export default {
   },
   methods: {
     beginTurn () {
+      // this.$store.dispatch('player/useDay')
+      this.$store.dispatch('player/load', 0)
+      this.$store.dispatch('player/alarm')
+
       if (!this.player) { return }
 
       // this.player.turn()
       this.motd = true
 
-      if (this.player.play && this.player.newMails.length) {
-        this.viewMessage = true
-        this.message = this.player.newMails[0]
+      let play = this.$store.getters['player/play']
+      if (play) {
+        this.showMessage = play.show
+        this.message = play.message
+        this.motd &= !play.show
       }
 
-      if (this.player.offers.length) {
-        this.viewOffer = true
-        this.offer = this.player.offers[0]
-        this.offered = true
-        this.motd = false
+      let offer = this.$store.getters['player/offer']
+      if (offer) {
+        this.viewOffer = offer.show
+        this.offer = offer.offer
+        this.offered = offer.offered
+        this.motd &= !offer.offered
       }
 
-      if (this.player.play) {
-        this.motd = false
-      }
+      this.$store.dispatch('player/showBfr')
+      console.log(this.$store.getters.prompt)
     },
     nextTurn () {
-      this.$store.dispatch('nextTurn')
-      // this.player = game.player()
-      // game.activePlayer = '' + game.playerId
-      // this.updateForm()
+      this.$store.dispatch('player/next')
+
+      if (this.$store.state.player.rdQd) this.$store.dispatch('player/processMsgs')
+      this.$store.commit('player/resetRdQd')
+      this.$store.dispatch('player/showBfr')
+
       this.$router.push('/new-turn')
-    },
-    updateForm: function () {
-      if (!this.player) { return }
-      this.fieldDate = this.player.fieldDate.id
-      this.fieldName = this.player.fieldDate.caption
-
-      // this.activePlayer = '' + tabIndex
-      // this.player.bills = this.players[tabIndex].total.bills
-
-      // fmField.cdField.Day := Player.Day;
-    },
-    useDay: function () {
-      if (!this.player) { return }
-      this.player.fieldDate.useDay()
-      this.updateForm()
-    },
-    turnClick: function () {
-      this.$store.dispatch('nextTurn')
-      this.useDay()
-    },
-    fieldClick: function () {
-      alert('Field click')
-      // fmField.Show;
     },
     acceptOffer: function (offer) {
       this.viewOffer = false
@@ -385,14 +370,14 @@ export default {
       this.offer = null
       this.offered = false
     },
-    showItem: function (item) {
+    viewItem: function (item) {
       this.viewOffer = true
       this.offer = item
       this.offered = false
     },
-    showMessage: function (message) {
+    viewMessage: function (message) {
       this.message = message
-      this.viewMessage = true
+      this.showMessage = true
     }
   },
   mounted: function () {

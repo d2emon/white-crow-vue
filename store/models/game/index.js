@@ -39,6 +39,31 @@ module.exports = {
   addPlayer: function (id, name) {
     this.players.push(Player.createPlayer('' + id, name))
     this.turns.players = this.players.length
+
+    // extern long curch,cms;
+    // extern long mynum;
+    // extern long maxu;
+    // extern long rd_qd;
+    // let fl = 0
+    // let string = ''
+    // extern char globme[];
+
+    // makebfr()
+    // cms = -1
+    // putmeon(name)
+    // if (!openworld()) crapup("Sorry AberMUD is currently unavailable");
+    /*
+    if (mynum >= maxu) {
+      printf("\nSorry AberMUD is full at the moment\n");
+      return(0);
+    }
+    */
+    // globme = name
+    // rte(name)
+    // closeworld()
+    // cms = -1
+    // special(".g",name)
+    // i_setup=1;
   },
   addPlayers: function (count) {
     if (count < this.minPlayers) { return }
