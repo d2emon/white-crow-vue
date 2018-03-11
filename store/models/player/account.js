@@ -4,11 +4,13 @@ module.exports = function () {
     account: 0,
     obligations: 0,
     bills: 0,
-    pay: function (value) {
-      if (value <= this.cash) {
-        this.cash -= value
+    modify: function (value) {
+      let newValue = this.cash + value
+      if (newValue > 0) {
+        this.cash = newValue
+        return
       }
-      this.account -= (value - this.cash)
+      this.account = newValue
       this.cash = 0
     }
   }

@@ -1,8 +1,6 @@
 var messages = require('../../data/post.json')
 var gravatar = require('gravatar')
-
-const POST_MESSAGE = -1001
-const POST_GAME = -1002
+var codes = require('../codes')
 
 module.exports = function (date) {
   return {
@@ -19,19 +17,20 @@ module.exports = function (date) {
       // fmPost.ShowPost(fmPlay.Player.Messages.CurrentMessage);
       // M := fmPlay.Player.Messages.CurrentMessage;
 
-      let code = POST_MESSAGE
-      if (message.play) code = POST_GAME
-	    
+      let code = codes.POST_MESSAGE
+      if (message.play) code = codes.POST_GAME
+
       let from = {
         title: message.from,
         avatar: ''
       }
-      from.avatar = gravatar.url(from.title, { d: 'retro' }), // 'https://www.gravatar.com/avatar/' + name + '?d=retro',
+      from.avatar = gravatar.url(from.title, { d: 'retro' }) // 'https://www.gravatar.com/avatar/' + name + '?d=retro',
       player.addMessage(
-        from,
         code,
-        message.text,
-        message
+        {
+          from: from,
+          data: message
+        }
       )
     }
   }

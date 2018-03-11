@@ -1,6 +1,7 @@
-var gravatar = require('gravatar')
-var Field = require('../field')
-var Account = require('./account')
+const gravatar = require('gravatar')
+const Field = require('../field')
+const Account = require('./account')
+const codes = require('../codes')
 
 function createPlayer (id, name) {
   return {
@@ -27,14 +28,6 @@ function createPlayer (id, name) {
         return this.score
       }
     },
-    // Total:     TDayTotal;
-    total: {
-      day: 0,
-      cost: 0,
-      bills: 0,
-      bank: 0,
-      month: 0
-    },
 
     messages: [],
 
@@ -46,58 +39,45 @@ function createPlayer (id, name) {
     items: [],
     play: null,
 
-    tickets: [
-      {
-        active: false,
-        cost: 0,
-        payed: false
-      },
-      {
-        active: false,
-        cost: 0,
-        payed: false
-      },
-      {
-        active: false,
-        cost: 0,
-        payed: false
-      }
-    ],
-
     countMails: function () {
       return this.mails.length + this.newMails.length
     },
 
-    addMessage: function (from, code, text, data) {
+    addMessage: function (code, data) {
       this.messages.push({
         active: false,
         day: this.day,
-        from: from,
+        from: data.from,
         code: code,
-        text: text,
-        data: data
+        data: data.data
       })
     },
     doMessage: function (msg) {
       if (!msg) return
+      if (msg.active) return
       msg.active = true
-      if (msg.code === -1001){
+      console.log(msg)
+      if (msg.code === codes.POST_MESSAGE) {
         console.log('MAIL')
-	this.addMail(msg)
-        console.log(msg)
+        this.addMail(msg)
         return
       }
-      if (msg.code === -1002) {
-	console.log('GAME')
-	// this.addMail(msg)
-        console.log(msg)
+      if (msg.code === codes.POST_GAME) {
+        console.log('GAME')
+        // this.addMail(msg)
 
         this.play = msg.data
+        this.play.avatar = msg.from.avatar
         // this.tickets[mail.fromId].cost = mail.cost
         // this.tickets[mail.fromId].active = true
+        return
+      }
+      if (msg.code === codes.BUSINESS) {
+        console.log('BUSINESS')
+        this.offerItem(msg.data)
+        return
       }
       console.log(msg)
-      return
     },
     processMessages: function () {
       this.messages.forEach(item => { this.doMessage(item) })
@@ -111,12 +91,14 @@ function createPlayer (id, name) {
       // this.post.nextCard
       // this.mail.addFromCard(this.post.currentMessage)
 
+      /*
       let ticket = -1
       for (var i = 0; i <= 2; i++) {
         if (this.tickets[i].active) {
           ticket = i
         }
       }
+      */
       /**
        * if (MessageDlg('Pay?', mtInformation, [mbYes, mbNo], 0) = mrYes) {
        *   fmPlay.Player.PayTicket(Ticket)
@@ -136,7 +118,7 @@ function createPlayer (id, name) {
         day: mail.day,
         from: mail.from.title,
         avatar: mail.from.avatar,
-        text: mail.text,
+        text: mail.data.text,
         cost: mail.data.cost || mail.data.obligation
       })
 
@@ -145,7 +127,7 @@ function createPlayer (id, name) {
     },
     addBill: function (msg) {
       let payed = false
-      if (this.tickets[msg.fromId]) { payed = this.tickets[msg.fromId].payed }
+      // if (this.tickets[msg.fromId]) { payed = this.tickets[msg.fromId].payed }
       if (payed) { return }
 
       // if (!msg.cost) { return }
@@ -155,7 +137,7 @@ function createPlayer (id, name) {
           this.money.bills += msg.cost
           // this.total.bills += post.cost
         } else {
-          this.money.cash += msg.cost
+          this.money.modify(msg.cost)
         }
       }
 
@@ -165,8 +147,8 @@ function createPlayer (id, name) {
       }
 
       if (msg.fromId) {
-        this.tickets[msg.fromId].cost = msg.cost
-        this.tickets[msg.fromId].active = true
+        // this.tickets[msg.fromId].cost = msg.cost
+        // this.tickets[msg.fromId].active = true
       }
     },
     offerItem: function (item) {
@@ -186,7 +168,7 @@ function createPlayer (id, name) {
       })
     },
     addItem: function (item) {
-      this.money.pay(item.cost)
+      this.money.modify(-item.cost)
       this.items.push(item)
       console.log(item)
       console.log(this.items)
@@ -196,49 +178,44 @@ function createPlayer (id, name) {
       this.newMails = []
       this.play = null
       this.offers = []
+      console.log(this.newMails)
 
-      for (var i = 1; i <= 2; i++) {
-        this.tickets[i].active = false
-      }
-
-      this.total.day = this.money.cash
+      // for (var i = 1; i <= 2; i++) {
+      //   this.tickets[i].active = false
+      // }
 
       if (this.day <= 0) { this.day = 31 }
       if (this.day >= 31) { this.newMonth() }
       this.day += this.dice.roll()
       if (this.day >= 31) { this.day = 31 }
 
-      this.fieldDate = Field.getDate(this.day)
+      this.date = Field.getDate(this.day)
+      this.addMessage(codes.DAY, { data: this.date })
 
-      if (this.fieldDate.cost < 0) {
-        this.money.pay(-this.fieldDate.cost)
-      } else {
-        this.total.cost = this.fieldDate.cost
-        this.money.cash += this.total.cost
-      }
+      this.money.modify(this.date.cost)
 
-      this.fieldDate.useDay(this)
+      this.date.useDay(this)
     },
     newMonth: function () {
       this.day = 0
-      this.total.bills = 0
-      this.total.bank = 0
-      this.total.month = this.money.cash
+      // this.total.bills = 0
+      // this.total.bank = 0
+      // this.total.month = this.money.cash
     },
     nextMonth: function () {
       if (this.money.account > 0) {
-        this.total.bank = this.money.account / 10
+        // this.total.bank = this.money.account / 10
       }
       if (this.money.account < -100) {
-        this.total.bank = this.money.account / 5
+        // this.total.bank = this.money.account / 5
       }
 
-      this.money.cash += this.total.bills
-      this.money.cash += this.total.bank
+      // this.money.modify(this.total.bills)
+      // this.money.modify(this.total.bank)
     },
     payTicket: function (id) {
-      this.money.cash += this.tickets[id].cost
-      this.tickets[id].payed = true
+      // this.money.modify(this.tickets[id].cost)
+      // this.tickets[id].payed = true
     }
   }
   // Self.NewMonth

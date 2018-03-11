@@ -11,7 +11,7 @@
           День {{ player.day }}
         </v-flex>
         <v-flex md6>
-          <span v-if="player && player.fieldDate">{{ player.fieldDate.caption }}</span>
+          <span v-if="player && player.date">{{ player.date.caption }}</span>
           <span v-else>День</span>
         </v-flex>
       </v-layout>

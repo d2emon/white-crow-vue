@@ -45,8 +45,8 @@
                   <v-card flat>
                     <v-card-text>
                       <template v-if="p === player">
-                        <v-alert color="success" v-if="player.fieldDate" v-model="motd" :icon="player.fieldDate.icon" dismissible>
-                          {{ player.fieldDate.message }}
+                        <v-alert color="success" v-if="player.date" v-model="motd" :icon="player.date.icon" dismissible>
+                          {{ player.date.message }}
                         </v-alert>
                       </template>
                       <v-layout row wrap>
@@ -96,14 +96,6 @@
                                     <v-icon large v-if="(p.dice.score > 0) && (p.dice.score < 7)">mdi-dice-{{ p.dice.score }}</v-icon>
                                     <v-icon large v-else>mdi-dice-multiple</v-icon>
                                   </v-list-tile-action>
-                              </v-list-tile>
-                              <v-list-tile>
-                                  <v-list-tile-content>
-                                    <v-list-tile-title>Банк:</v-list-tile-title>
-                                </v-list-tile-content>
-                                <v-list-tile-action>
-                                    <v-text-field name="player-bank" single-line readonly label="Bank" :value="p.total.bank"></v-text-field>
-                                </v-list-tile-action>
                               </v-list-tile>
                             </v-list>
                           </v-card>

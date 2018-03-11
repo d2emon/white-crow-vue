@@ -1,11 +1,9 @@
 var items = require('../../data/business.json')
-
-const dtBusiness = 2
+var codes = require('../codes')
 
 module.exports = function (date) {
   return {
     date: date,
-    dateType: dtBusiness,
     caption: 'Бизнес',
     message: 'У вас новое предложение',
     cost: 0,
@@ -14,8 +12,10 @@ module.exports = function (date) {
       let id = Math.floor(Math.random() * this.items.length)
       let item = this.items[id]
 
-      console.log(item)
-      player.offerItem(item)
+      player.addMessage(
+        codes.BUSINESS,
+        { data: item }
+      )
     }
   }
 }
