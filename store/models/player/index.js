@@ -1,26 +1,13 @@
 var gravatar = require('gravatar')
 var Field = require('../field')
+var Account = require('./account')
 
 function createPlayer (id, name) {
   return {
     id: id,
     name: name,
     avatar: gravatar.url(name, { d: 'retro' }), // 'https://www.gravatar.com/avatar/' + name + '?d=retro',
-    active: false,
-    // Money:     TMoney;
-    money: {
-      cash: 325,
-      account: 0,
-      obligations: 0,
-      bills: 0,
-      pay: function (value) {
-        if (value <= this.cash) {
-          this.cash -= value
-        }
-        this.account -= (value - this.cash)
-        this.cash = 0
-      }
-    },
+    money: Account(),
     day: 0,
     // FieldDate: TFieldDate;
     fieldDate: {
@@ -52,10 +39,11 @@ function createPlayer (id, name) {
     // Messages:  TMessageList;
     // mail: this.messages
 
+    mails: [],
     newMails: [],
+
     offers: [],
 
-    mails: [],
     items: [],
     play: null,
 
@@ -76,7 +64,11 @@ function createPlayer (id, name) {
         payed: false
       }
     ],
+
     countMails: function () {
+      console.log(this)
+      console.log(this.mails)
+      console.log(this.newMails)
       return this.mails.length + this.newMails.length
     },
 
@@ -158,16 +150,12 @@ function createPlayer (id, name) {
       console.log(item)
       console.log(this.items)
     },
-    showSplash: function () {
-      this.active = true
-    },
     turn: function () {
       this.mails = this.mails.concat(this.newMails)
       this.newMails = []
       this.play = null
       this.offers = []
 
-      this.active = false
       for (var i = 1; i <= 2; i++) {
         this.tickets[i].active = false
       }

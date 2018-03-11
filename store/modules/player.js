@@ -3,13 +3,29 @@ const Messages = require('../models/messages')
 
 const state = {
   player: null,
-
   pos: null,
+
+  messages: [],
+
   sysbuf: '',
   rdQd: false
 }
 
 const getters = {
+  messages: (state) => {
+    if (!state.player) return false
+    return state.player.countMails()
+  },
+  items: (state) => {
+    if (!state.player) return false
+    if (!state.player.items) return false
+    return state.player.items.length
+  },
+  day: (state) => {
+    if (!state.player) return false
+    return state.player.day
+  },
+
   play: state => {
     if (!state.player.play) return {}
     if (!state.player.messages.length) return {}
@@ -60,6 +76,7 @@ const mutations = {
   playerTurn: (state) => { state.player.turn() },
   showSplash: (state) => { state.player.showSplash() },
 
+  nextPlayer: state => { Game.nextTurn() },
   resetRdQd: (state) => { state.rdQd = false },
 
   textBfr: (state, value) => {
@@ -81,7 +98,9 @@ const actions = {
   },
   next: function (context) {
     context.dispatch('sendmsg', { text: 'Next Turn' })
-    Game.nextTurn()
+    context.commit('nextPlayer')
+    context.dispatch('load', 0)
+    context.state.player.turn()
   },
   update: function (context) {
     // if (!context.state.player) { return }
@@ -137,10 +156,6 @@ const actions = {
     // Item on worn
     // forchk()
     // Hiccup if drunk
-  },
-
-  playerTurn: function (context) {
-    context.getters.player.turn()
   },
 
   alarm: function (context) {

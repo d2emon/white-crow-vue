@@ -31,13 +31,8 @@ export default {
     players: function () { return this.$store.getters.players },
     player: function () { return this.$store.getters.player }
   },
-  data: function () {
-    return {
-    }
-  },
   methods: {
     beginTurn: function () {
-      this.$store.commit('playerTurn')
       this.$router.push('/play')
     }
   },

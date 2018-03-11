@@ -1,8 +1,7 @@
 <template>
   <v-layout justify-center align-center>
-    <!-- v-btn fab bottom right color="pink" dark fixed @click.stop="nextTurn" -->
     <v-btn fab bottom right dark fixed @click.stop="nextTurn">
-      <v-icon>casino</v-icon>
+      <v-icon>mdi-dice-multiple</v-icon>
     </v-btn>
 
     <v-dialog v-model="messageBox.show" max-width="500px">
@@ -243,7 +242,7 @@ export default {
   },
   data: function () {
     return {
-      activePlayer: '' + this.$store.state.game.Turns.turn,
+      activePlayer: this.$store.getters.playerId,
       fieldDate: 0,
       fieldName: 0,
       motd: true,
@@ -261,8 +260,12 @@ export default {
   },
   methods: {
     beginTurn () {
+      console.log('ACTIVE PLAYER' + this.activePlayer)
+
       // this.$store.dispatch('player/useDay')
       this.$store.dispatch('player/load', 0)
+      console.log('this.player')
+      console.log(this.player)
       this.$store.dispatch('player/alarm')
 
       if (!this.player) { return }
@@ -330,6 +333,7 @@ export default {
     }
   },
   mounted: function () {
+    if (!this.players) { this.$router.push('/set-players') }
     if (!this.players.length) { this.$router.push('/set-players') }
     if (this.nextPlayer) { this.$router.push('new-turn') }
 

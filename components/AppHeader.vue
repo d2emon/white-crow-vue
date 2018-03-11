@@ -64,10 +64,10 @@
 export default {
   name: 'app-header',
   computed: {
-    player: function () { return this.$store.getters.player },
-    day: function () { return this.player ? this.player.day : false },
-    mails: function () { return this.player ? this.player.countMails() : false },
-    items: function () { return this.player ? this.player.items.length : false },
+    player: function () { return this.$store.getters['player/player'] },
+    day: function () { return this.$store.getters['player/day'] },
+    mails: function () { return this.$store.getters['player/messages'] },
+    items: function () { return this.$store.getters['player/items'] },
     menuItems: function () {
       return [
         {
@@ -78,7 +78,7 @@ export default {
         { icon: 'notifications' },
         { spacer: true },
         {
-          icon: 'casino',
+          icon: 'mdi-dice-multiple',
           action: this.nextTurn,
           text: 'Next Turn'
         },
@@ -90,18 +90,18 @@ export default {
         {
           icon: 'today',
           click: 'showField',
-          badge: this.player.day,
+          badge: this.day,
           text: 'Field'
         },
         {
           icon: 'mail',
-          badge: this.player.mails,
+          badge: this.mails,
           badgeColor: 'red',
           text: 'Mails'
         },
         {
           icon: 'work',
-          badge: this.player.items,
+          badge: this.items,
           badgeColor: 'red',
           text: 'Items'
         }

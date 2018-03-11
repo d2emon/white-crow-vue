@@ -3,9 +3,11 @@ module.exports = {
   round: 0,
 
   players: 0,
+  playerId: 0,
 
   reset: function () {
-    this.turn = -1
+    this.playerId = 0
+    this.turn = 0
     this.round = 0
   },
   nextRound: function () {
@@ -14,8 +16,12 @@ module.exports = {
   },
   nextTurn: function () {
     this.turn++
-    if (this.turn >= this.players) {
-      this.nextRound()
+    this.playerId = 0
+  },
+  nextPlayer: function () {
+    this.playerId++
+    if (this.playerId >= this.players) {
+      this.nextTurn()
     }
   }
 }

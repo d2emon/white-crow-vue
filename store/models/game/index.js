@@ -1,5 +1,4 @@
 var Player = require('../player')
-
 var Turns = require('./turns')
 var Field = require('../field')
 
@@ -10,7 +9,7 @@ module.exports = {
   maxPlayers: 6,
   players: [],
   player: function () {
-    return this.players[this.turns.turn]
+    return this.players[this.turns.playerId]
   },
 
   field: Field.field,
@@ -27,14 +26,14 @@ module.exports = {
     // this.addPlayers(players)
     // this.nextRound()
   },
+  start: function () {
+    this.turns.reset()
+    this.player().turn()
+  },
 
   nextTurn: function () {
-    this.turns.nextTurn()
-
-    // this.player().showSplash()
-    // this.nextRound()
+    this.turns.nextPlayer()
   },
-  nextRound: function () { this.turns.nextRound() },
 
   addPlayer: function (id, name) {
     this.players.push(Player.createPlayer('' + id, name))

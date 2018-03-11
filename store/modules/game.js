@@ -47,6 +47,7 @@ const state = {
 }
 
 const getters = {
+  playerId: (state) => { return '' + state.Turns.playerId },
   turn: (state) => { return state.Turns.turn },
   round: (state) => { return state.Turns.round },
 
@@ -55,9 +56,9 @@ const getters = {
 }
 
 const mutations = {
-  start: function (state) {
-    state.Game.create()
-  },
+  create: state => { state.Game.create() },
+  start: state => { state.Game.start() },
+
   clearPlayers: function (state) {
     state.players = []
   },
@@ -72,14 +73,8 @@ const mutations = {
   addItem: function (state, item) {
     state.Game.player().addItem(item)
   },
-  nextRound: function (state) {
-    state.Game.nextRound()
-  },
   nextTurn: function (state) {
     state.Game.nextTurn()
-  },
-  playerTurn: function (state) {
-    state.Game.player().turn()
   },
   showSplash: function (state) {
     state.Game.player().showSplash()
@@ -89,7 +84,6 @@ const mutations = {
 const actions = {
   nextTurn: function (context) {
     context.commit('nextTurn')
-    // context.commit('showSplash')
   },
   playerTurn: function (context) {
     context.getters.player.turn()

@@ -98,21 +98,19 @@ export default {
   methods: {
     askPlayers: function (count) {
       this.count = count
-
-      this.$store.commit('start')
-      this.addPlayers()
+      this.addPlayers(count)
     },
-    addPlayers: function () {
+    addPlayers: function (count) {
       this.$store.commit('addPlayers', this.count)
     },
     setPlayerNames: function (e) {
-      this.$store.commit('nextRound')
+      this.$store.commit('start')
       this.$router.push('/new-turn')
     }
   },
   mounted: function () {
+    this.$store.commit('create')
     this.askPlayers(3)
   }
 }
 </script>
-

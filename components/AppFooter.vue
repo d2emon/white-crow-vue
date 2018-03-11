@@ -2,10 +2,10 @@
     <v-footer app fixed>
       <v-layout row wrap>
         <v-flex md2>
-          Игрок №{{ turns.turn + 1 }}: <span v-if="player">{{ player.name }}</span>
+          Игрок №{{ turns.playerId + 1 }}: <span v-if="player">{{ player.name }}</span>
         </v-flex>
         <v-flex md2>
-          Тур {{ turns.round }}
+          Тур {{ turns.turn + 1 }} ({{ turns.round + 1 }})
         </v-flex>
         <v-flex md2 v-if="player">
           День {{ player.day }}
@@ -22,11 +22,8 @@
 export default {
   name: 'app-footer',
   computed: {
-    game: function () { return this.$store.state.game },
     turns: function () { return this.$store.state.game.Turns },
     player: function () { return this.$store.getters.player }
-  },
-  data: () => ({
-  })
+  }
 }
 </script>
