@@ -5,83 +5,12 @@
       <v-icon>casino</v-icon>
     </v-btn>
 
-    <v-dialog v-model="showMessage" max-width="500px">
-      <v-card v-if="message">
-        <v-card-title>
-          <h1>{{ message.from }}</h1>
-        </v-card-title>
-        <v-card-text>
-          <v-layout row wrap>
-            <v-flex md4>
-              <v-avatar>
-                <img v-bind:src="message.avatar" :alt="message.from">
-              </v-avatar>
-              <template v-if="message.cost">
-                <h1 v-if="message.cost < 0">{{ -message.cost }}</h1>
-                <h1 v-else>{{ message.cost }}</h1>
-              </template>
-            </v-flex>
-            <v-flex md8>
-              {{ message.text }}
-            </v-flex>
-          </v-layout>
-        </v-card-text>
-        <v-card-actions>
-          <v-btn color="primary" flat @click.stop="viewMessage=false">Ok</v-btn>
-        </v-card-actions>
-      </v-card>
+    <v-dialog v-model="messageBox.show" max-width="500px">
+      <message-box :message="messageBox.message" @close="hideMessage" v-if="messageBox.message" />
     </v-dialog>
 
-    <v-dialog v-model="viewOffer" max-width="500px">
-      <v-card v-if="offer">
-        <v-card-title>
-          <h1>{{ offer.title }}</h1>
-        </v-card-title>
-        <v-card-text>
-          <v-layout row wrap>
-            <v-flex md4>
-              <v-avatar :size="128">
-                <img v-bind:src="offer.avatar" :alt="offer.title">
-              </v-avatar>
-            </v-flex>
-            <v-flex md8>
-              <v-list one-line>
-                <v-list-tile>
-                  <v-list-tile-content>
-                    <v-list-tile-title>Цена:</v-list-tile-title>
-                  </v-list-tile-content>
-                  <v-list-tile-action>{{ offer.cost }} монет</v-list-tile-action>
-                </v-list-tile>
-                <v-list-tile>
-                  <v-list-tile-content>
-                    <v-list-tile-title>Стоимость:</v-list-tile-title>
-                  </v-list-tile-content>
-                  <v-list-tile-action>{{ offer.price }} монет</v-list-tile-action>
-                </v-list-tile>
-                <v-list-tile>
-                  <v-list-tile-content>
-                    <v-list-tile-title>Комисионные:</v-list-tile-title>
-                  </v-list-tile-content>
-                  <v-list-tile-action>{{ offer.comission }} монет</v-list-tile-action>
-                </v-list-tile>
-              </v-list>
-            </v-flex>
-            <v-flex md12>
-              {{ offer.description }}
-            </v-flex>
-          </v-layout>
-        </v-card-text>
-        <v-card-actions>
-          <template v-if="!offered">
-            <v-btn color="primary" flat @click.stop="viewOffer=false">Ok</v-btn>
-          </template>
-          <template v-else>
-            <v-spacer />
-            <v-btn color="success" flat @click.stop="acceptOffer(offer)">Да</v-btn>
-            <v-btn color="error" flat @click.stop="declineOffer(offer)">Нет</v-btn>
-          </template>
-        </v-card-actions>
-      </v-card>
+    <v-dialog v-model="offer.show" max-width="500px">
+      <item-box :item="offer.offer" :ask="offer.offered" @accept="accept" @close="hideItem" v-if="offer.offer" />
     </v-dialog>
 
     <v-container grid-list-md text-xs-center>
@@ -193,7 +122,7 @@
                               <v-list two-line>
                                 <v-subheader v-if="p.newMails.length > 0" v-text="'Сегодня'"></v-subheader>
                                 <template v-for="(mail, id) in p.newMails">
-                                  <v-list-tile avatar v-bind:key="'mail-new-' + id" @click="viewMessage(mail)">
+                                  <v-list-tile avatar v-bind:key="'mail-new-' + id" @click="showMessage(mail)">
                                     <v-list-tile-avatar>
                                        <template v-if="mail.avatar">
                                           <img v-bind:src="mail.avatar">
@@ -210,7 +139,7 @@
                                 </template>
                                 <v-subheader v-if="p.mails.length > 0" v-text="'Прошлые'"></v-subheader>
                                 <template v-for="(mail, id) in p.mails">
-                                  <v-list-tile avatar v-bind:key="'mail-' + id" @click="viewMessage(mail)">
+                                  <v-list-tile avatar v-bind:key="'mail-' + id" @click="showMessage(mail)">
                                     <v-list-tile-avatar>
                                        <template v-if="mail.avatar">
                                           <img v-bind:src="mail.avatar">
@@ -240,7 +169,7 @@
                               </v-toolbar>
                               <v-list two-line>
                                 <template v-for="(item, id) in p.items">
-                                  <v-list-tile avatar v-bind:key="'item-1-' + id + '-' + item.title" @click="viewItem(item)">
+                                  <v-list-tile avatar v-bind:key="'item-1-' + id + '-' + item.title" @click="showItem(item)">
                                     <v-list-tile-avatar>
                                       <img v-bind:src="item.avatar">
                                     </v-list-tile-avatar>
@@ -294,8 +223,14 @@
 </template>
 
 <script>
+import { MessageBox, ItemBox } from '@/components'
+
 export default {
   name: 'play',
+  components: {
+    MessageBox,
+    ItemBox
+  },
   computed: {
     game: function () { return this.$store.state.game.Game },
     players: function () { return this.$store.getters.players },
@@ -313,12 +248,15 @@ export default {
       fieldName: 0,
       motd: true,
 
-      showMessage: false,
-      message: null,
-
-      offered: false,
-      viewOffer: false,
-      offer: null
+      messageBox: {
+        show: false,
+        message: null
+      },
+      offer: {
+        show: false,
+        offered: false,
+        offer: null
+      }
     }
   },
   methods: {
@@ -332,20 +270,8 @@ export default {
       // this.player.turn()
       this.motd = true
 
-      let play = this.$store.getters['player/play']
-      if (play) {
-        this.showMessage = play.show
-        this.message = play.message
-        this.motd &= !play.show
-      }
-
-      let offer = this.$store.getters['player/offer']
-      if (offer) {
-        this.viewOffer = offer.show
-        this.offer = offer.offer
-        this.offered = offer.offered
-        this.motd &= !offer.offered
-      }
+      this.showGame(this.$store.getters['player/play'])
+      this.showOffer(this.$store.getters['player/offer'])
 
       this.$store.dispatch('player/showBfr')
       console.log(this.$store.getters.prompt)
@@ -359,25 +285,48 @@ export default {
 
       this.$router.push('/new-turn')
     },
-    acceptOffer: function (offer) {
-      this.viewOffer = false
-      this.offer = null
-      this.offered = false
+
+    showOffer (offer) {
+      console.log(offer)
+      if (!offer) return
+
+      this.offer.show = offer.show
+      this.offer.offered = offer.offered
+      this.offer.offer = offer.offer
+      this.motd &= !offer.offered
+    },
+    showItem: function (item) {
+      this.offer.show = true
+      this.offer.offered = false
+      this.offer.offer = item
+    },
+    accept: function (offer) {
+      console.log(offer)
       this.$store.commit('addItem', offer)
+      this.hideItem()
     },
-    declineOffer: function (offer) {
-      this.viewOffer = false
-      this.offer = null
-      this.offered = false
+    hideItem () {
+      this.offer.show = false
+      this.offer.offer = null
+      this.offer.offered = false
     },
-    viewItem: function (item) {
-      this.viewOffer = true
-      this.offer = item
-      this.offered = false
+
+    showGame (play) {
+      console.log(play)
+      if (!play) return
+      if (!play.show) return
+
+      this.messageBox.show = play.show
+      this.messageBox.message = play.message
+      this.motd &= play.show
     },
-    viewMessage: function (message) {
-      this.message = message
-      this.showMessage = true
+    showMessage (message) {
+      this.messageBox.show = true
+      this.messageBox.message = message
+    },
+    hideMessage () {
+      this.messageBox.show = false
+      this.messageBox.message = null
     }
   },
   mounted: function () {
