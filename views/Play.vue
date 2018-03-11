@@ -260,12 +260,8 @@ export default {
   },
   methods: {
     beginTurn () {
-      console.log('ACTIVE PLAYER' + this.activePlayer)
-
       // this.$store.dispatch('player/useDay')
       this.$store.dispatch('player/load', 0)
-      console.log('this.player')
-      console.log(this.player)
       this.$store.dispatch('player/alarm')
 
       if (!this.player) { return }
@@ -277,7 +273,7 @@ export default {
       this.showOffer(this.$store.getters['player/offer'])
 
       this.$store.dispatch('player/showBfr')
-      console.log(this.$store.getters.prompt)
+      console.log(this.$store.getters['player/prompt'])
     },
     nextTurn () {
       this.$store.dispatch('player/next')
@@ -290,7 +286,6 @@ export default {
     },
 
     showOffer (offer) {
-      console.log(offer)
       if (!offer) return
 
       this.offer.show = offer.show
@@ -315,13 +310,13 @@ export default {
     },
 
     showGame (play) {
+      console.log('Play')
       console.log(play)
       if (!play) return
-      if (!play.show) return
 
-      this.messageBox.show = play.show
-      this.messageBox.message = play.message
-      this.motd &= play.show
+      this.messageBox.show = true
+      this.messageBox.message = play
+      this.motd = false
     },
     showMessage (message) {
       this.messageBox.show = true

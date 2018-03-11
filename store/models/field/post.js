@@ -1,12 +1,13 @@
 var messages = require('../../data/post.json')
+var gravatar = require('gravatar')
 
-const dtPost = 1
+const POST_MESSAGE = -1001
+const POST_GAME = -1002
 
 module.exports = function (date) {
   return {
     icon: 'mdi-message',
     date: date,
-    dateType: dtPost,
     caption: 'Почта',
     message: 'У вас новое сообщение',
     cost: 0,
@@ -16,30 +17,22 @@ module.exports = function (date) {
       let message = this.messages[id]
 
       // fmPost.ShowPost(fmPlay.Player.Messages.CurrentMessage);
-
       // M := fmPlay.Player.Messages.CurrentMessage;
 
-      var ticket = -1
-      for (var i = 0; i <= 2; i++) {
-        if (player.tickets[i].active) {
-          ticket = i
-        }
+      let code = POST_MESSAGE
+      if (message.play) code = POST_GAME
+	    
+      let from = {
+        title: message.from,
+        avatar: ''
       }
-
-      if (ticket >= 0) {
-        /*
-        if (MessageDlg('Pay?', mtInformation, [mbYes, mbNo], 0) = mrYes) {
-          fmPlay.Player.PayTicket(Ticket)
-        }
-        */
-
-        /*
-         * if MessageDlg(PostText, mtInformation, [mbYes, mbNo], 0) = mrYes then
-         *   fmPlay.Player.PayTicket(Ticket);
-         */
-      }
-
-      player.addMail(message)
+      from.avatar = gravatar.url(from.title, { d: 'retro' }), // 'https://www.gravatar.com/avatar/' + name + '?d=retro',
+      player.addMessage(
+        from,
+        code,
+        message.text,
+        message
+      )
     }
   }
 }

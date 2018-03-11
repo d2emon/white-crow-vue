@@ -36,8 +36,7 @@ function createPlayer (id, name) {
       month: 0
     },
 
-    // Messages:  TMessageList;
-    // mail: this.messages
+    messages: [],
 
     mails: [],
     newMails: [],
@@ -66,12 +65,84 @@ function createPlayer (id, name) {
     ],
 
     countMails: function () {
-      console.log(this)
-      console.log(this.mails)
-      console.log(this.newMails)
       return this.mails.length + this.newMails.length
     },
 
+    addMessage: function (from, code, text, data) {
+      this.messages.push({
+        active: false,
+        day: this.day,
+        from: from,
+        code: code,
+        text: text,
+        data: data
+      })
+    },
+    doMessage: function (msg) {
+      if (!msg) return
+      msg.active = true
+      if (msg.code === -1001){
+        console.log('MAIL')
+	this.addMail(msg)
+        console.log(msg)
+        return
+      }
+      if (msg.code === -1002) {
+	console.log('GAME')
+	// this.addMail(msg)
+        console.log(msg)
+
+        this.play = msg.data
+        // this.tickets[mail.fromId].cost = mail.cost
+        // this.tickets[mail.fromId].active = true
+      }
+      console.log(msg)
+      return
+    },
+    processMessages: function () {
+      this.messages.forEach(item => { this.doMessage(item) })
+    },
+
+    addMail: function (mail) {
+      if (!mail) { return }
+      if (!mail.data) { return }
+
+      // this.mails += 1
+      // this.post.nextCard
+      // this.mail.addFromCard(this.post.currentMessage)
+
+      let ticket = -1
+      for (var i = 0; i <= 2; i++) {
+        if (this.tickets[i].active) {
+          ticket = i
+        }
+      }
+      /**
+       * if (MessageDlg('Pay?', mtInformation, [mbYes, mbNo], 0) = mrYes) {
+       *   fmPlay.Player.PayTicket(Ticket)
+       * }
+       */
+
+      /**
+       * if MessageDlg(PostText, mtInformation, [mbYes, mbNo], 0) = mrYes then
+       *   fmPlay.Player.PayTicket(Ticket);
+       */
+
+      // let cost = 0
+      // if (mail.cost) { cost += mail.cost }
+      // if (mail.obligation) { cost += mail.obligation }
+
+      this.newMails.push({
+        day: mail.day,
+        from: mail.from.title,
+        avatar: mail.from.avatar,
+        text: mail.text,
+        cost: mail.data.cost || mail.data.obligation
+      })
+
+      this.addBill(mail.data)
+      console.log(this.newMails)
+    },
     addBill: function (msg) {
       let payed = false
       if (this.tickets[msg.fromId]) { payed = this.tickets[msg.fromId].payed }
@@ -97,36 +168,6 @@ function createPlayer (id, name) {
         this.tickets[msg.fromId].cost = msg.cost
         this.tickets[msg.fromId].active = true
       }
-    },
-    addMail: function (mail) {
-      if (!mail) { return }
-
-      console.log(mail)
-
-      // this.mails += 1
-      // this.post.nextCard
-      // this.mail.addFromCard(this.post.currentMessage)
-
-      let cost = 0
-      if (mail.cost) { cost += mail.cost }
-      if (mail.obligation) { cost += mail.obligation }
-
-      this.newMails.push({
-        day: this.day,
-        from: mail.from,
-        avatar: gravatar.url(mail.from, { d: 'retro' }), // 'https://www.gravatar.com/avatar/' + name + '?d=retro',
-        text: mail.text,
-        cost: cost
-      })
-
-      this.addBill(mail)
-
-      if (mail.play) {
-        this.play = mail
-        // this.tickets[mail.fromId].cost = mail.cost
-        // this.tickets[mail.fromId].active = true
-      }
-      console.log(this.newMails)
     },
     offerItem: function (item) {
       console.log(item)

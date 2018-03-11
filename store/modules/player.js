@@ -27,12 +27,9 @@ const getters = {
   },
 
   play: state => {
-    if (!state.player.play) return {}
-    if (!state.player.messages.length) return {}
-    return {
-      show: true,
-      message: state.player.newMails[0]
-    }
+    if (!state.player) return false
+    if (!state.player.play) return false
+    return state.player.play
   },
   offer: state => {
     if (!state.player.offers.length) return {}
@@ -87,6 +84,8 @@ const mutations = {
   },
   clearBfr: state => { state.sysbuf = '' },
 
+  processMsgs: state => { state.player.processMessages() },
+
   resetPos: state => { state.pos = Messages.findend() },
   setPos: (state, value) => { state.pos = value }
 }
@@ -100,7 +99,7 @@ const actions = {
     context.dispatch('sendmsg', { text: 'Next Turn' })
     context.commit('nextPlayer')
     context.dispatch('load', 0)
-    context.state.player.turn()
+    context.commit('playerTurn')
   },
   update: function (context) {
     // if (!context.state.player) { return }
@@ -138,8 +137,10 @@ const actions = {
     console.log(msg)
   },
   processMsgs: function (context, interrupt) {
+    if (!context.state.player) return
     if (!context.state.pos) context.commit('resetPos')
-    Messages.process(context.state.pos)
+    // Messages.process(context.state.pos)
+    context.commit('processMsgs')
     context.commit('resetPos')
 
     context.dispatch('eorte', interrupt)
