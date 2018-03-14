@@ -20,7 +20,7 @@ export default new Router({
   routes: [
     {
       path: '/',
-      redirect: '/play',
+      redirect: '/start',
       name: 'Home',
       component: Full,
       children: [

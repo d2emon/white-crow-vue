@@ -1,7 +1,9 @@
 const state = {
   visible: true,
-  minified: true,
+  minified: false,
   menu: [
+    { spacer: true },
+
     { icon: 'contacts', text: 'Игроки' },
     { icon: 'history', text: 'Друзья' },
     { icon: 'content_copy', text: 'Дубликаты' },
