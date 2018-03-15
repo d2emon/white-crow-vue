@@ -1,5 +1,5 @@
 <template>
-    <v-footer app fixed>
+    <v-footer app inset fixed>
       <v-layout row wrap>
         <v-flex md2>
           Игрок №{{ turns.playerId + 1 }}: <span v-if="player">{{ player.name }}</span>

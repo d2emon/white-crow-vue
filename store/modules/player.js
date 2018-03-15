@@ -100,6 +100,10 @@ const actions = {
     context.commit('nextPlayer')
     context.dispatch('load', 0)
     context.commit('playerTurn')
+    // ---------------------------------------------
+    if (context.state.rdQd) context.dispatch('processMsgs')
+    context.commit('resetRdQd')
+    context.dispatch('showBfr')
   },
   update: function (context) {
     // if (!context.state.player) { return }

@@ -7,7 +7,7 @@
     <div class="app-body">
       <main class="main">
         <v-content>
-          <v-container fluid fill-height>
+          <v-container fluid fill-height class="pa-0">
             <router-view></router-view>
           </v-container>
         </v-content>

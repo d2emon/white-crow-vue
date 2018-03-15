@@ -1,5 +1,5 @@
 <template>
-  <v-toolbar app clipped-left fixed >
+  <v-toolbar app fixed >
       <v-toolbar-title :style="$vuetify.breakpoint.smAndUp ? 'width: 300px; min-width: 250px' : 'min-width: 72px'" class="ml-0 pl-3">
         <v-toolbar-side-icon @click.stop="switchDrawer"></v-toolbar-side-icon>
         <span class="hidden-xs-only">Белая Ворона</span>

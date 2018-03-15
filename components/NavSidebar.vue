@@ -1,7 +1,7 @@
 <template>
   <v-navigation-drawer
     fixed
-    clipped
+    permanent
     app
     :value="show"
     :mini-variant="mini"
@@ -150,10 +150,12 @@ export default {
       this.$store.commit('sidebar/switchMini')
     },
     nextTurn () {
-      this.$store.dispatch('nextTurn')
+      // this.$store.dispatch('nextTurn')
       // this.player = game.player()
       // game.activePlayer = '' + game.playerId
       // this.updateForm()
+
+      this.$store.dispatch('player/next')
       this.$router.push('/new-turn')
     }
   },

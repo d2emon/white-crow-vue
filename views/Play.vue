@@ -63,10 +63,10 @@
                               </v-flex>
                             </v-layout>
                             <v-list two-line>
-                              <v-list-tile>
+                              <v-list-tile v-if="p.date">
                                   <v-list-tile-content>
                                     <v-list-tile-title>День:</v-list-tile-title>
-                                    <v-list-tile-sub-title>{{ p.fieldDate.caption }}</v-list-tile-sub-title>
+                                    <v-list-tile-sub-title>{{ p.date.caption }}</v-list-tile-sub-title>
                                   </v-list-tile-content>
                                   <v-list-tile-action>{{ p.day }}</v-list-tile-action>
                               </v-list-tile>
@@ -113,7 +113,7 @@
                               <v-list two-line>
                                 <v-subheader v-if="p.newMails.length > 0" v-text="'Сегодня'"></v-subheader>
                                 <template v-for="(mail, id) in p.newMails">
-                                  <v-list-tile avatar v-bind:key="'mail-new-' + id" @click="showMessage(mail)">
+                                  <v-list-tile avatar class="mail" v-bind:key="'mail-new-' + id" @click="showMessage(mail)">
                                     <v-list-tile-avatar>
                                        <template v-if="mail.avatar">
                                           <img v-bind:src="mail.avatar">
@@ -124,13 +124,13 @@
                                     </v-list-tile-avatar>
                                     <v-list-tile-content>
                                       <v-list-tile-title v-html="mail.from"></v-list-tile-title>
-                                      <v-list-tile-sub-title v-html="mail.text"></v-list-tile-sub-title>
+                                      <v-list-tile-sub-title class="mail" v-html="mail.text"></v-list-tile-sub-title>
                                     </v-list-tile-content>
                                   </v-list-tile>
                                 </template>
                                 <v-subheader v-if="p.mails.length > 0" v-text="'Прошлые'"></v-subheader>
                                 <template v-for="(mail, id) in p.mails">
-                                  <v-list-tile avatar v-bind:key="'mail-' + id" @click="showMessage(mail)">
+                                  <v-list-tile avatar class="mail" v-bind:key="'mail-' + id" @click="showMessage(mail)">
                                     <v-list-tile-avatar>
                                        <template v-if="mail.avatar">
                                           <img v-bind:src="mail.avatar">
@@ -141,7 +141,7 @@
                                     </v-list-tile-avatar>
                                     <v-list-tile-content>
                                       <v-list-tile-title v-html="mail.from"></v-list-tile-title>
-                                      <v-list-tile-sub-title v-html="mail.text"></v-list-tile-sub-title>
+                                      <v-list-tile-sub-title class="mail" v-html="mail.text"></v-list-tile-sub-title>
                                     </v-list-tile-content>
                                   </v-list-tile>
                                 </template>
@@ -235,8 +235,6 @@ export default {
   data: function () {
     return {
       activePlayer: this.$store.getters.playerId,
-      fieldDate: 0,
-      fieldName: 0,
       motd: true,
 
       messageBox: {
@@ -266,14 +264,12 @@ export default {
 
       this.$store.dispatch('player/showBfr')
       console.log(this.$store.getters['player/prompt'])
+
+      console.log(this.player.date)
+      console.log(this.players)
     },
     nextTurn () {
       this.$store.dispatch('player/next')
-
-      if (this.$store.state.player.rdQd) this.$store.dispatch('player/processMsgs')
-      this.$store.commit('player/resetRdQd')
-      this.$store.dispatch('player/showBfr')
-
       this.$router.push('/new-turn')
     },
 
@@ -328,3 +324,12 @@ export default {
   }
 }
 </script>
+
+<style>
+.mail {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  min-width: 0px;
+}
+</style>
